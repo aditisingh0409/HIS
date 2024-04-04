@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import Profile from './ProfilePhoto';
 //import ReactCalendar from './Cal';
 import Patients from './Patients';
 
 export default function Doctor() {
-  const [toggle, setToggle] = useState(true);
-  const [isOpen, setIsOpen] = useState(true);
+  const [toggle, setToggle] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const Toggle = () => {
     setToggle(!toggle);
   };
 
   const toggleProfile = () => {
-    console.log("profile clicked");
     setIsOpen(!isOpen);
   };
 
@@ -29,7 +29,16 @@ export default function Doctor() {
       name: "Jane Smith",
       profilePhoto: require('./img1.jpg'),
     },
-    // Add more patient objects as needed
+    {
+      id: 3,
+      name: "John Smith",
+      profilePhoto: require('./img1.jpg'),
+    },
+    {
+      id: 4,
+      name: "Jane Doe",
+      profilePhoto: require('./img1.jpg'),
+    },
   ];
 
   return (
@@ -45,10 +54,9 @@ export default function Doctor() {
           <Navbar Toggle={Toggle} />
           {isOpen && (
             <View style={styles.dropdownMenu}>
-              {/* <View style={styles.dropdownContent}>
-                <Text>This is a dropdown content</Text>
-                <Text>It opens on clicking the profile picture</Text>
-              </View> */}
+              <View style={styles.dropdownContent}>
+              <Profile Toggle={toggleProfile}/>
+              </View>
             </View>
           )}
           <View>

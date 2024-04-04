@@ -5,7 +5,7 @@ function Sidebar({ Toggle }) {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(isOpen);
     Toggle();
   };
 

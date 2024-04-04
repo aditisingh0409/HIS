@@ -28,7 +28,7 @@ function Navbar({ Toggle }) {
       <View style={styles.profileContainer}>
         <TouchableOpacity onPress={toggleProfile}>
           <Image
-            source={require('./img1.jpg')}
+            source={require('./img2.jpg')}
             style={styles.profileImage}
           />
         </TouchableOpacity>

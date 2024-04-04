@@ -1,10 +1,67 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Avatar, Button } from 'react-native-paper';
 
-export default function ProfileStatistics() {
-  return (
-    <View style={styles.container}>
+export default function ProfileStatistics( {Toggle}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+    Toggle();
+  };
+  
+//   return (
+//     <View style={styles.container}>
+//     {isOpen && (  
+//       <TouchableOpacity onPress={handleToggle}>
+//         <View>
+//           <Image
+//               source={require('./img2.jpg')}
+//               style={styles.profileImage}
+//             />
+//         </View>
+//       </TouchableOpacity>
+//     )}
+//       <Card style={styles.card}>
+//         <Card.Content style={styles.cardContent}>
+//           <Avatar.Image 
+//             source={{ uri: 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp' }}
+//             size={100}
+//             style={styles.avatar}
+//           />
+//           <Text style={styles.name}>Julie L. Arsenault</Text>
+//           <Text style={styles.subtitle}>@Programmer | mdbootstrap.com</Text>
+//           <View style={styles.socialButtons}>
+//             <Button icon="facebook" mode="outlined" style={styles.socialButton} />
+//             <Button icon="twitter" mode="outlined" style={styles.socialButton} />
+//             <Button icon="skype" mode="outlined" style={styles.socialButton} />
+//           </View>
+//           <Button mode="contained" style={styles.messageButton}>
+//             Message now
+//           </Button>
+//           <View style={styles.statsContainer}>
+//             <View style={styles.stat}>
+//               <Text style={styles.statValue}>8471</Text>
+//               <Text style={styles.statLabel}>Wallets Balance</Text>
+//             </View>
+//             <View style={styles.stat}>
+//               <Text style={styles.statValue}>8512</Text>
+//               <Text style={styles.statLabel}>Followers</Text>
+//             </View>
+//             <View style={styles.stat}>
+//               <Text style={styles.statValue}>4751</Text>
+//               <Text style={styles.statLabel}>Total Transactions</Text>
+//             </View>
+//           </View>
+//         </Card.Content>
+//       </Card>
+//     </View>
+//   );
+// }
+
+return (
+  <View style={styles.container}>
+    {isOpen && (  
       <Card style={styles.card}>
         <Card.Content style={styles.cardContent}>
           <Avatar.Image 
@@ -38,8 +95,18 @@ export default function ProfileStatistics() {
           </View>
         </Card.Content>
       </Card>
-    </View>
-  );
+    )}
+
+    <TouchableOpacity onPress={handleToggle}>
+      <View>
+        <Image
+          source={{ uri: 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp' }}
+          style={styles.profileImage}
+        />
+      </View>
+    </TouchableOpacity>
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
