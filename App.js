@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react"; 
+import Login from "./Screens/Login";
+import Register from "./Screens/Register";
+import ForgotPassword from "./Screens/ForgotPassword";
+import AdDashboard from "./Screens/Admin/Dashboard"
+import DocDashboard from "./Screens/Doctor/DocDashboard"
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider as PaperProvider } from 'react-native-paper';
+ 
+const Stack = createStackNavigator();
 
-export default function App() {
+function App(){
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator screenOptions = {{headerShown: false}}>
+      <Stack.Screen name = "Login" component={Login}/>
+      <Stack.Screen name = "Register" component={Register}/>
+      <Stack.Screen name = "Forgot Password" component={ForgotPassword} />
+      <Stack.Screen name = "AdDashboard" component={AdDashboard} />
+      <Stack.Screen name = "DocDashboard" component={DocDashboard} />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default () => {
+  return (
+    <NavigationContainer>
+      <PaperProvider>
+      <App />
+      </PaperProvider>
+    </NavigationContainer>
+  )
+}
