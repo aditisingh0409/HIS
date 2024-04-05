@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 function Sidebar({ Toggle }) {
   const [isOpen, setIsOpen] = useState(true);
+  const navigation = useNavigation();
 
   const handleToggle = () => {
     setIsOpen(isOpen);
     Toggle();
   };
+
+  const onPressDashboard = () => {
+    console.log("DocDashboard");
+    navigation.navigate("DocDashboard");
+  }
+  
+  const onPressPatientInfo = () => {
+    console.log("PatientInfo");
+    navigation.navigate("PatientInfo");
+  }
+  
+  const onPressAddDiagnosis = () => {
+    console.log("AddDiagnosis");
+    navigation.navigate("AddDiagnosis");
+  }
 
   return (
     <View style={[styles.sidebar, !isOpen && styles.closedSidebar]}>
@@ -20,13 +37,15 @@ function Sidebar({ Toggle }) {
         <Text style={styles.brandName}>HIS</Text>
       </View>
       <View style={styles.menuItemsContainer}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={onPressDashboard}>
           <Text style={styles.menuItemIcon}>Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={onPressPatientInfo}>
           <Text style={styles.menuItemIcon}>Patient List</Text>
         </TouchableOpacity>
-        {/* Add more menu items as needed */}
+        <TouchableOpacity style={styles.menuItem} onPress={onPressAddDiagnosis}>
+          <Text style={styles.menuItemIcon}>Add Diagnosis</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

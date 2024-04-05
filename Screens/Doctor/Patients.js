@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 //import { Link } from 'react-router-native';
 
-const Patients = ({ patients }) => {
+const Patients = ( {patients} ) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>List of Patients</Text>

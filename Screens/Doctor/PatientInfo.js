@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import Sidebar from './Screens/Doctor/Sidebar';
-import Navbar from './Screens/Doctor/Navbar';
-import { Link } from 'react-router-native';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
+import { useNavigation } from '@react-navigation/native';
+//import { Link } from 'react-router-native';
 
 export default function PInfo() {
   const [toggle, setToggle] = useState(true);
+  const navigation = useNavigation();
 
   const Toggle = () => {
     setToggle(!toggle);
   };
+
+  const onPressAddDiagnosis = () => {
+    console.log("AddDiagnosis");
+    navigation.navigate("AddDiagnosis");
+  }
 
   return (
     <View style={styles.container}>
@@ -24,7 +31,7 @@ export default function PInfo() {
           <View style={styles.col}>
             <Navbar Toggle={Toggle} />
             <View style={styles.profileContainer}>
-              <Image source={require('./images/14.jpg')} style={styles.profileImage} />
+              <Image source={require('./img1.jpg')} style={styles.profileImage} />
               <View style={styles.infoContainer}>
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
@@ -55,10 +62,8 @@ export default function PInfo() {
                   <Text style={styles.label}>Blood group:</Text>
                   <Text>B+</Text>
                 </View>
-                <TouchableOpacity>
-                  <Link to="/AddDiag">
-                    <Text style={styles.button}>Add Diagnosis</Text>
-                  </Link>
+                <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
+                  <Text style={styles.buttonText}>Add Diagnosis</Text>
                 </TouchableOpacity>
               </View>
             </View>

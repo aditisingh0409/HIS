@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import Sidebar from './Screens/Doctor/Sidebar';
-import Navbar from './Screens/Doctor/Navbar';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
 
 export default function AddDiagnosis() {
   const [toggle, setToggle] = useState(true);
