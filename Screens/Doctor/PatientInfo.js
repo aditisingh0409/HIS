@@ -3,10 +3,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import { useNavigation } from '@react-navigation/native';
-//import { Link } from 'react-router-native';
 
 export default function PInfo() {
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
   const navigation = useNavigation();
 
   const Toggle = () => {
@@ -20,15 +19,13 @@ export default function PInfo() {
 
   return (
     <View style={styles.container}>
-      <View>
         <View style={styles.row}>
-          {toggle && (
-            <View style={styles.sidebar}>
-              <Sidebar Toggle={Toggle} />
-            </View>
-          )}
-          {toggle && <View style={styles.sidebar}></View>}
-          <View style={styles.col}>
+        {toggle && (
+          <View style={styles.sidebarContainer}>
+            <Sidebar Toggle={Toggle} />
+          </View>
+        )}
+        <View style={styles.content}>
             <Navbar Toggle={Toggle} />
             <View style={styles.profileContainer}>
               <Image source={require('./img1.jpg')} style={styles.profileImage} />
@@ -36,7 +33,7 @@ export default function PInfo() {
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Name:</Text>
-                  <Text>Saloni</Text>
+                  <Text>John Doe</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Address:</Text>
@@ -44,7 +41,7 @@ export default function PInfo() {
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Email:</Text>
-                  <Text>saloni@gmail.com</Text>
+                  <Text>john_doe@gmail.com</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Phone:</Text>
@@ -52,7 +49,7 @@ export default function PInfo() {
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Gender:</Text>
-                  <Text>Female</Text>
+                  <Text>Male</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Date of Birth:</Text>
@@ -69,7 +66,6 @@ export default function PInfo() {
             </View>
           </View>
         </View>
-      </View>
     </View>
   );
 }
@@ -77,22 +73,27 @@ export default function PInfo() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
+    width: '100%',
   },
   row: {
     flexDirection: 'row',
+    width: '100%',
   },
-  sidebar: {
+  sidebarContainer: {
+    backgroundColor: '#FFFFFF',
+  },
+  content: {
     flex: 1,
-    backgroundColor: 'white',
-  },
-  col: {
-    flex: 4,
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    width: '100%',
   },
   profileContainer: {
-    alignItems: 'center',
-    marginTop: 50,
-    marginLeft: 100,
+    flex: 1,
+    margin: 10,
     flexDirection: 'row',
+    width: '100%',
   },
   profileImage: {
     width: 150,
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginLeft: 50,
+    width: '50%',
   },
   heading: {
     fontSize: 20,
@@ -117,6 +119,17 @@ const styles = StyleSheet.create({
     marginRight: 50,
   },
   button: {
-    color: 'blue',
+    backgroundColor: '#4F2197',
+    width: '50%',
+    padding: 10,
+    borderRadius: 10,
+    marginLeft: 20,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
   },
 });

@@ -16,9 +16,9 @@ function Sidebar({ Toggle }) {
     navigation.navigate("DocDashboard");
   }
   
-  const onPressPatientInfo = () => {
-    console.log("PatientInfo");
-    navigation.navigate("PatientInfo");
+  const onPressPatientList = () => {
+    console.log("PatientList");
+    navigation.navigate("PatientList");
   }
   
   const onPressAddDiagnosis = () => {
@@ -40,7 +40,7 @@ function Sidebar({ Toggle }) {
         <TouchableOpacity style={styles.menuItem} onPress={onPressDashboard}>
           <Text style={styles.menuItemIcon}>Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={onPressPatientInfo}>
+        <TouchableOpacity style={styles.menuItem} onPress={onPressPatientList}>
           <Text style={styles.menuItemIcon}>Patient List</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} onPress={onPressAddDiagnosis}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { IconButton, Menu } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
@@ -28,7 +28,7 @@ function Navbar({ Toggle }) {
       <View style={styles.profileContainer}>
         <TouchableOpacity onPress={toggleProfile}>
           <Image
-            source={require('./img2.jpg')}
+            source={require('../Images/img.jpeg')}
             style={styles.profileImage}
           />
         </TouchableOpacity>

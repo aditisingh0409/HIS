@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 export default function AddDiagnosis() {
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
 
   const Toggle = () => {
     setToggle(!toggle);
@@ -18,7 +18,6 @@ export default function AddDiagnosis() {
             <Sidebar Toggle={Toggle} />
           </View>
         )}
-        {toggle && <View style={styles.emptyColumn} />}
         <View style={styles.content}>
           <Navbar Toggle={Toggle} />
           <Text style={styles.heading}>Add Diagnosis</Text>
@@ -65,17 +64,16 @@ export default function AddDiagnosis() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#CCCCCC',
+    flexDirection: 'row',
+    width: '100%',
   },
   row: {
     flexDirection: 'row',
+    width: '100%',
   },
   sidebarContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  emptyColumn: {
-    flex: 1,
   },
   content: {
     flex: 3,
@@ -89,7 +87,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
-    justifyContent: 'center',
   },
   inputRow: {
     flexDirection: 'row',
@@ -104,15 +101,22 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     borderRadius: 5,
     padding: 5,
+    height: 40,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginTop: 20,
   },
   button: {
     backgroundColor: '#DDDDDD',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 10,
+  },  
+  buttonText: {
+    color: '#000000',
+    fontSize: 16,
   },
 });

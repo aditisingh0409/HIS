@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import Profile from './ProfilePhoto';
-import ReactCalendar from './Cal';
 import Patients from './Patients';
 
 export default function Doctor() {
@@ -20,35 +19,35 @@ export default function Doctor() {
 
   const patients = [
     {
-      id: 1,
-      name: "John Doe",
-      profilePhoto: require('../Images/images1.jpeg'),
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      profilePhoto: require('../Images/images2.jpeg'),
-    },
-    {
-      id: 3,
-      name: "John Smith",
-      profilePhoto: require('../Images/images3.jpeg'),
-    },
-    {
-      id: 4,
-      name: "Jane Doe",
-      profilePhoto: require('../Images/images4.jpeg'),
-    },
-    {
-      id: 5,
-      name: "Doe Jane",
-      profilePhoto: require('../Images/images2.jpeg'),
-    },
-    {
-      id: 6,
-      name: "Smith John",
-      profilePhoto: require('../Images/images1.jpeg'),
-    },
+        id: 1,
+        name: "John Doe",
+        profilePhoto: require('../Images/images1.jpeg'),
+      },
+      {
+        id: 2,
+        name: "Jane Smith",
+        profilePhoto: require('../Images/images2.jpeg'),
+      },
+      {
+        id: 3,
+        name: "John Smith",
+        profilePhoto: require('../Images/images3.jpeg'),
+      },
+      {
+        id: 4,
+        name: "Jane Doe",
+        profilePhoto: require('../Images/images4.jpeg'),
+      },
+      {
+        id: 5,
+        name: "Doe Jane",
+        profilePhoto: require('../Images/images2.jpeg'),
+      },
+      {
+        id: 6,
+        name: "Smith John",
+        profilePhoto: require('../Images/images1.jpeg'),
+      },
   ];
 
   return (
@@ -65,9 +64,6 @@ export default function Doctor() {
           </View>
           <View style={styles.patientsContainer}>
             <Patients patients={patients} />
-          </View>
-          <View style={styles.calendarContainer}>
-            <ReactCalendar />
           </View>
         </View>
       </View>
@@ -115,8 +111,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 20,
     justifyContent: 'flex-start',
-  },
-  calendarContainer: {
-    position: 'relative',
   },
 });

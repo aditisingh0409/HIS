@@ -16,17 +16,24 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
     "expo": "^49.0.23",
     "expo-status-bar": "~1.11.1",
     "native-base": "^3.4.28",
     "normalize-css-color": "^1.0.2",
     "react": "18.2.0",
+    "react-big-calendar": "^1.11.3",
+    "react-calendar": "^4.8.0",
+    "react-datepicker": "^6.6.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.6",
+    "react-native-big-calendar": "^4.11.0",
+    "react-native-datepicker": "^1.7.2",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-paper": "^5.12.3",
     "react-native-reanimated": "~3.3.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
