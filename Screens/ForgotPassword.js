@@ -6,14 +6,29 @@ import { Center } from "native-base";
 const ForgotPasswordScreen = (props) => {
   const [email, setEmail] = useState('');
 
-  const ProceedLogin = () => {
+  const ResetPassword = async (e) => {
+    e.preventDefault();  
+    
     if (validate()) {
       console.log("proceed");
       console.log(JSON.stringify({ email }));
       setEmail('');
     }
-  };
 
+    try{
+      const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/forgotPassword?email='+"jay1402panchal@gmail.com", 
+      {
+        headers:{
+          "ngrok-skip-browser-warning" : "true",
+        }
+    });
+    console.log("API response: "+JSON.stringify(response.data));
+    }
+    catch(err){
+      console.error(`Error! ${JSON.stringify(err.response)}`);
+    }
+  };
+  
   const validate = () => {
     let result = true;
     if (email === '' || email === null) {
@@ -44,7 +59,7 @@ const ForgotPasswordScreen = (props) => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={ProceedLogin}>
+          <TouchableOpacity style={styles.button} onPress={ResetPassword}>
             <Text style={styles.buttonText}>Reset Password</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={onPressLogin}>

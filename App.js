@@ -1,8 +1,7 @@
 import React from "react"; 
 import Login from "./Screens/Login";
-import Register from "./Screens/Register";
 import ForgotPassword from "./Screens/ForgotPassword";
-import AdDashboard from "./Screens/Admin/Dashboard"
+import AdDashboard from "./Screens/Admin/AdDashboard"
 import DocDashboard from "./Screens/Doctor/DocDashboard"
 import AddDiagnosis from "./Screens/Doctor/AddDiagnosis";
 import PatientList from "./Screens/Doctor/PatientList";
@@ -16,11 +15,10 @@ const Stack = createStackNavigator();
 function App(){
   return (
     <Stack.Navigator screenOptions = {{headerShown: false}}>
+      <Stack.Screen name = "DocDashboard" component={DocDashboard} />
       <Stack.Screen name = "Login" component={Login}/>
-      <Stack.Screen name = "Register" component={Register}/>
       <Stack.Screen name = "Forgot Password" component={ForgotPassword} />
       <Stack.Screen name = "AdDashboard" component={AdDashboard} />
-      <Stack.Screen name = "DocDashboard" component={DocDashboard} />
       <Stack.Screen name = "AddDiagnosis" component={AddDiagnosis} />
       <Stack.Screen name = "PatientList" component={PatientList} />
       <Stack.Screen name = "PatientInfo" component={PatientInfo} />

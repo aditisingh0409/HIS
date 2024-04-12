@@ -9,6 +9,25 @@ export default function ProfileStatistics( {Toggle}) {
     setIsOpen(!isOpen);
     Toggle();
   };
+
+        
+      //Update password
+      // try{
+      //   const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/changePassword', {
+      //     userId: "saloni-admin",
+      //     oldPassword: "12345",
+      //     "newPassword": "1234",
+      //     role: role
+      // }, {
+      //   headers: {
+      //     "userId":"saloni-admin",
+      //     "Authorization":"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWxvbmkiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTcxMjg0MDUwNywiZXhwIjoxNzEyOTI2OTA3fQ.LmX-nrj1Udzhh-fx62mXZoiY-qRvfMc8oufzlHokiCM"
+      //   }
+      // });
+      // console.log("API response: "+JSON.stringify(response.data));
+      // }catch(err){
+      //   console.error(`Error! ${JSON.stringify(err.response)}`);
+      // }
   
 //   return (
 //     <View style={styles.container}>

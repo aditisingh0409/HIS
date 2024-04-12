@@ -29,12 +29,10 @@ function Sidebar({ Toggle }) {
   return (
     <View style={[styles.sidebar, !isOpen && styles.closedSidebar]}>
       <View style={styles.menuIconContainer}>
-        <TouchableOpacity onPress={handleToggle}>
-          <Text style={styles.menuIcon}>☰</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.brandNameContainer}>
         <Text style={styles.brandName}>HIS</Text>
+        <TouchableOpacity onPress={handleToggle}>
+          <Text style={styles.menuIcon}>&#10006;</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.menuItemsContainer}>
         <TouchableOpacity style={styles.menuItem} onPress={onPressDashboard}>
@@ -62,11 +60,13 @@ const styles = StyleSheet.create({
     width: 50,
   },
   menuIconContainer: {
-    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 1,
+    alignItems: 'center',
   },
   menuIcon: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
   },
   brandNameContainer: {
     marginVertical: 10,

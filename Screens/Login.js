@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, Picker, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-//import axios from 'axios';
-//import { login } from "./Screens/Services/login_service.js";
+import axios from 'axios';
 import backgroundImage from './img1.jpg'; 
 
 const LoginScreen = (props) => {
@@ -12,72 +11,57 @@ const LoginScreen = (props) => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
 
-  let a = "admin"
-  let b = "saloni";
-  let c = "1234";
+  const ProceedLogin = async (e) => {
+    e.preventDefault();
+    
+    if (validate()) {
+      try {
+        const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/authenticate', {
+          username: username,
+          password: password,
+          role: role
+        });
 
-//   const ProceedLogin = async(e) => {
-//     e.preventDefault();
-//     if (validate()) {
+        console.log("API response: ", response.data);
 
-//       // try{
-//       //   const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/authenticate', {
-//       //     username: username,
-//       //     password: password,
-//       //     role: role
-//       // });
-//       // console.log("API response: "+JSON.stringify(response.data));
-//       // }catch(err){
-//       //   console.error(`Error! ${err}`);
-//       // }
+        if (response.data.response === "SUCCESS") {
+          try {
+              alert('Login Successful');
+              console.log("DocDashboard");
+              props.navigation.navigate("DocDashboard");
+              sessionStorage.setItem('username', username);
+            }
+            catch(error) {
+              console.error(error);
+              alert('Incorrect username or password');
+            };
+        } 
+        else {
+          alert('Incorrect username or password');
+        }
+      } 
+      catch (err) {
+        console.error(`Error! ${err}`);
+      }
+    }
+  };
 
-//         if(role === a && username === b && password === c){
-//             login(username, password, role)
-//         .then((resp) => {
-//           console.log(resp);
-//           setUsername('');
-//           setPassword('');
-//           setRole('');
-//           alert('Login Successful');
-//           console.log("Dashboard");
-//           props.navigation.navigate("Dashboard");
-//           sessionStorage.setItem('username', username);
-//         })
-//         .catch((error) => {
-//           console.log(error);
-//           alert('Incorrect username or password');
-//         });
-//     }
-//     else {
-//       alert('Incorrect username or password');
-//     }
-//     }
-// };
+  const validate = () => {
+    let result = true;
+    if (username === '' || username === null) {
+      result = false;
+      alert('Please Enter Username');
+    } 
+    else if (password === '' || password === null) {
+      result = false;
+      alert('Please Enter Password');
+    }
+    return result;
+  };
 
-  // const validate = () => {
-  //   let result = true;
-  //   if (username === '' || username === null) {
-  //     result = false;
-  //     alert('Please Enter Username');
-  //   } else if (password === '' || password === null) {
-  //     result = false;
-  //     alert('Please Enter Password');
-  //   }
-  //   return result;
-  // };
-
-  const onPressLogin = () => {
-    console.log("DocDashboard");
-    props.navigation.navigate("DocDashboard");
-  }
   const onPressForgotPassword = () => {
     console.log("Forgot Password");
     props.navigation.navigate("Forgot Password");
-  }
-
-  const onPressRegister = () => {
-    console.log("Register");
-    props.navigation.navigate("Register");
   }
 
   return (
@@ -87,8 +71,7 @@ const LoginScreen = (props) => {
         <Picker
             selectedValue={role}
             style={styles.input}
-            onValueChange={(itemValue, itemIndex) => setRole(itemValue)}
-        >
+            onValueChange={(itemValue, itemIndex) => setRole(itemValue)}>
             <Picker.Item label="Select Role" value="" />
             <Picker.Item label="Admin" value="admin" />
             <Picker.Item label="Nurse" value="nurse" />
@@ -109,18 +92,12 @@ const LoginScreen = (props) => {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity style={styles.button} onPress={onPressLogin}>
+        <TouchableOpacity style={styles.button} onPress={ProceedLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <Pressable onPress={onPressForgotPassword}>
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </Pressable>
-        <TouchableOpacity>
-          <Text style={styles.registerLink}>Not a member?
-          <Pressable onPress={onPressRegister}>
-              <Text style={styles.forgotPassword}> Register</Text>
-          </Pressable></Text>
-        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
