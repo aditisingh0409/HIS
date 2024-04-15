@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, TextInput, TouchableOpacity, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, TextInput, TouchableOpacity, Text, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import DatePicker from 'react-native-datepicker';
 
@@ -42,28 +42,29 @@ const Cal1 = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        placeholder="Add Title"
-        style={styles.input}
-        value={newEvent.title}
-        onChangeText={(text) => setNewEvent({...newEvent, title: text })}
-      />
-      <DatePicker
-        style={styles.datePicker}
-        placeholder="Start Date"
-        date={newEvent.start}
-        onDateChange={(date) => setNewEvent({...newEvent, start: date })}
-      />
-      <DatePicker
-        style={styles.datePicker}
-        placeholder="End Date"
-        date={newEvent.end}
-        onDateChange={(date) => setNewEvent({...newEvent, end: date })}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleAddEvent}>
-        <Text style={styles.buttonText}>Add Event</Text>
-      </TouchableOpacity>
-    
+      <View style={styles.row}>
+        <TextInput
+          placeholder="Add Title"
+          style={styles.input}
+          value={newEvent.title}
+          onChangeText={(text) => setNewEvent({...newEvent, title: text })}
+        />
+        <DatePicker
+          style={styles.datePicker}
+          placeholder="Start Date"
+          date={newEvent.start}
+          onDateChange={(date) => setNewEvent({...newEvent, start: date })}
+        />
+        <DatePicker
+          style={styles.datePicker}
+          placeholder="End Date"
+          date={newEvent.end}
+          onDateChange={(date) => setNewEvent({...newEvent, end: date })}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleAddEvent}>
+          <Text style={styles.buttonText}>Add Event</Text>
+        </TouchableOpacity>
+      </View>
       <Calendar events={allEvents} />
     </SafeAreaView>
   );
@@ -72,20 +73,27 @@ const Cal1 = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '90%',
+    marginHorizontal: '5%',
+  },
   input: {
-    width: '40%',
+    width: '30%',
     height: 40,
     borderWidth: 1,
     borderColor: 'gray',
     marginBottom: 10,
-    paddingHorizontal: 10,
+    marginVertical: 10,
+    padding: 10,
   },
   button: {
     backgroundColor: '#4F2197',
-    width: '40%',
+    width: '20%',
     padding: 10,
     borderRadius: 10,
     marginVertical: 10,
@@ -97,8 +105,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   datePicker: {
-    width: '40%',
+    width: '30%',
     marginBottom: 10,
+    marginVertical: 10,
+    padding: 10,
   },
 });
 

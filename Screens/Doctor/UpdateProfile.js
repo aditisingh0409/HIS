@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import backgroundImage from './img1.jpg';
 
 const UpdateProfileScreen = (props) => {
   const navigation = useNavigation();
@@ -35,67 +36,94 @@ const UpdateProfileScreen = (props) => {
     return result;
   };
 
+  const onPressCancel = () => {
+    console.log("DocDashboard");
+    navigation.navigate("DocDashboard");
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Update Profile</Text>
-      <TextInput
-        placeholder="Name"
-        style={styles.input}
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        placeholder="Phone Number"
-        style={styles.input}
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-      />
-      <TouchableOpacity style={styles.button} onPress={updateProfile}>
-        <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-    </View>
+    <ImageBackground source={backgroundImage} style={styles.background}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Update Profile</Text>
+        <TextInput
+          placeholder="Name"
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          placeholder="Phone Number"
+          style={styles.input}
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={updateProfile}>
+            <Text style={styles.buttonText}>Update Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={onPressCancel}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+  },
+  container: {
+    borderRadius: 20,
+    width: '80%',
+    height: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 30,
+    color: '#1B1B1B',
+    fontWeight: '500',
     marginBottom: 20,
   },
   input: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#E8E8E8',
     width: '90%',
     height: 40,
-    marginVertical: 10,
+    color: '#6D6D6D',
+    borderRadius: 10,
     paddingHorizontal: 10,
-    borderRadius: 5,
+    marginVertical: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   button: {
     backgroundColor: '#4F2197',
-    width: '90%',
+    borderRadius: 10,
+    justifyContent: 'center',
     padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
+    width: '65%',
+    marginHorizontal: 10,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: 'white',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

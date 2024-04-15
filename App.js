@@ -6,6 +6,8 @@ import DocDashboard from "./Screens/Doctor/DocDashboard"
 import AddDiagnosis from "./Screens/Doctor/AddDiagnosis";
 import PatientList from "./Screens/Doctor/PatientList";
 import PatientInfo from "./Screens/Doctor/PatientInfo";
+import DoctorInfo from "./Screens/Doctor/DoctorInfo";
+import UpdateProfile from "./Screens/Doctor/UpdateProfile";
 import ChangePassword from "./Screens/Doctor/ChangePassword";
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,6 +25,8 @@ function App(){
       <Stack.Screen name = "AddDiagnosis" component={AddDiagnosis} />
       <Stack.Screen name = "PatientList" component={PatientList} />
       <Stack.Screen name = "PatientInfo" component={PatientInfo} />
+      <Stack.Screen name = "DoctorInfo" component={DoctorInfo} />
+      <Stack.Screen name = "Update Profile" component={UpdateProfile} />
       <Stack.Screen name = "Change Password" component={ChangePassword} />
     </Stack.Navigator>
   );

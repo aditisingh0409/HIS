@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import backgroundImage from './img1.jpg'; 
+import axios from 'axios';
+import backgroundImage from './img1.jpg';
 
 const ChangePasswordScreen = (props) => {
   const navigation = useNavigation();
@@ -12,24 +13,24 @@ const ChangePasswordScreen = (props) => {
 
   const changePassword = async (e) => {
     e.preventDefault();
-    
+
     if (validate()) {
-        try{
-          const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/changePassword', {
-            userId: "saloni-admin",
-            oldPassword: "12345",
-            "newPassword": "1234",
-            role: role
+      try {
+        const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/changePassword', {
+          userId: "saloni-admin",
+          oldPassword: currentPassword,
+          "newPassword": newPassword,
+          role: role
         }, {
           headers: {
-            "userId":"saloni-admin",
-            "Authorization":"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWxvbmkiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTcxMjg0MDUwNywiZXhwIjoxNzEyOTI2OTA3fQ.LmX-nrj1Udzhh-fx62mXZoiY-qRvfMc8oufzlHokiCM"
+            "userId": "saloni-admin",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWxvbmkiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTcxMjg0MDUwNywiZXhwIjoxNzEyOTI2OTA3fQ.LmX-nrj1Udzhh-fx62mXZoiY-qRvfMc8oufzlHokiCM"
           }
         });
-        console.log("API response: "+JSON.stringify(response.data));
-        }catch(err){
-          console.error(`Error! ${JSON.stringify(err.response)}`);
-        }
+        console.log("API response: " + JSON.stringify(response.data));
+      } catch (err) {
+        console.error(`Error! ${JSON.stringify(err.response)}`);
+      }
     }
   };
 

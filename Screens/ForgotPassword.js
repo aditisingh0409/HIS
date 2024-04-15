@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import img1 from './img1.jpg';
 import { Center } from "native-base";
+import axios from "axios";
 
 const ForgotPasswordScreen = (props) => {
   const [email, setEmail] = useState('');
@@ -10,19 +11,19 @@ const ForgotPasswordScreen = (props) => {
     e.preventDefault();  
     
     if (validate()) {
-      console.log("proceed");
-      console.log(JSON.stringify({ email }));
+      console.log("Entered email: "+email );
       setEmail('');
     }
 
     try{
-      const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/forgotPassword?email='+"jay1402panchal@gmail.com", 
+      const response = await axios.get('https://present-neat-mako.ngrok-free.app/his/forgotPassword?email='+email, 
       {
         headers:{
           "ngrok-skip-browser-warning" : "true",
         }
     });
-    console.log("API response: "+JSON.stringify(response.data));
+      console.log("API response: "+JSON.stringify(response.data));
+      props.navigation.navigate("Login");
     }
     catch(err){
       console.error(`Error! ${JSON.stringify(err.response)}`);

@@ -11,6 +11,16 @@ function Navbar({ Toggle }) {
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
+  const onPressDoctorInfo = () => {
+    console.log("DoctorInfo");
+    navigation.navigate("DoctorInfo");
+  }
+  
+  const onPressUpdateProfile = () => {
+    console.log("Update Profile");
+    navigation.navigate("Update Profile");
+  }
+  
   const onPressChangePassword = () => {
     console.log("Change Password");
     navigation.navigate("Change Password");
@@ -41,8 +51,8 @@ function Navbar({ Toggle }) {
             visible={visible}
             onDismiss={closeMenu}
             anchor={<Button onPress={openMenu}><Image source={require('../Images/img.jpeg')} style={styles.profileImage} /></Button>}>
-            <Menu.Item onPress={() => {}} title="View Profile" />
-            <Menu.Item onPress={() => {}} title="Update Profile" />
+            <Menu.Item onPress={onPressDoctorInfo} title="View Profile" />
+            <Menu.Item onPress={onPressUpdateProfile} title="Update Profile" />
             <Menu.Item onPress={onPressChangePassword} title="Change Password" />
             <Divider />
             <Menu.Item onPress={onPressLogout} title="Logout" />
