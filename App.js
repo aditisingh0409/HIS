@@ -6,6 +6,7 @@ import DocDashboard from "./Screens/Doctor/DocDashboard"
 import AddDiagnosis from "./Screens/Doctor/AddDiagnosis";
 import PatientList from "./Screens/Doctor/PatientList";
 import PatientInfo from "./Screens/Doctor/PatientInfo";
+import ChangePassword from "./Screens/Doctor/ChangePassword";
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -22,6 +23,7 @@ function App(){
       <Stack.Screen name = "AddDiagnosis" component={AddDiagnosis} />
       <Stack.Screen name = "PatientList" component={PatientList} />
       <Stack.Screen name = "PatientInfo" component={PatientInfo} />
+      <Stack.Screen name = "Change Password" component={ChangePassword} />
     </Stack.Navigator>
   );
 }
