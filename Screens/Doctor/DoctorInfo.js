@@ -12,6 +12,11 @@ export default function DocInfo() {
     setToggle(!toggle);
   };
 
+  const onPressBack = () => {
+    console.log("DocDashboard");
+    navigation.navigate("DocDashboard");
+  }
+
   return (
     <View style={styles.container}>
         <View style={styles.row}>
@@ -25,7 +30,7 @@ export default function DocInfo() {
             <View style={styles.profileContainer}>
               <Image source={require('./img1.jpg')} style={styles.profileImage} />
               <View style={styles.infoContainer}>
-                <Text style={styles.heading}>Doctor Information</Text>
+                <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Name:</Text>
                   <Text>John Doe</Text>
@@ -54,6 +59,9 @@ export default function DocInfo() {
                   <Text style={styles.label}>Blood group:</Text>
                   <Text>B+</Text>
                 </View>
+                <TouchableOpacity style={styles.button} onPress={onPressBack}>
+                  <Text style={styles.buttonText}>Back</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -109,5 +117,19 @@ const styles = StyleSheet.create({
   label: {
     minWidth: 100,
     marginRight: 50,
+  },
+  button: {
+    backgroundColor: '#4F2197',
+    width: '50%',
+    padding: 10,
+    borderRadius: 10,
+    marginLeft: 20,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
   },
 });
