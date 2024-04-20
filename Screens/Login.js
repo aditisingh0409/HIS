@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, Picker, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from 'react-native-picker';
 import axios from 'axios';
 import backgroundImage from './img1.jpg'; 
 
@@ -68,7 +69,7 @@ const LoginScreen = (props) => {
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.title}>User Login</Text>
-        <Picker
+        {/* <Picker
             selectedValue={role}
             style={styles.input}
             onValueChange={(itemValue, itemIndex) => setRole(itemValue)}>
@@ -78,7 +79,7 @@ const LoginScreen = (props) => {
             <Picker.Item label="Doctor" value="doctor" />
             <Picker.Item label="Pharmacist" value="pharmacist" />
             <Picker.Item label="Receptionist" value="receptionist" />
-        </Picker>
+        </Picker> */}
         <TextInput
           placeholder="Username"
           style={styles.input}
