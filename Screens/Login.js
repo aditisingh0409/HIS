@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from 'react-native-picker';
 import axios from 'axios';
 import backgroundImage from './img1.jpg'; 
 
-const LoginScreen = (props) => {
+const LoginScreen = () => {
   const navigation = useNavigation();
 
   const [username, setUsername] = useState('');
@@ -29,7 +28,7 @@ const LoginScreen = (props) => {
           try {
               alert('Login Successful');
               console.log("DocDashboard");
-              props.navigation.navigate("DocDashboard");
+              navigation.navigate("DocDashboard");
               sessionStorage.setItem('username', username);
             }
             catch(error) {
@@ -62,24 +61,13 @@ const LoginScreen = (props) => {
 
   const onPressForgotPassword = () => {
     console.log("Forgot Password");
-    props.navigation.navigate("Forgot Password");
+    navigation.navigate("Forgot Password");
   }
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.title}>User Login</Text>
-        {/* <Picker
-            selectedValue={role}
-            style={styles.input}
-            onValueChange={(itemValue, itemIndex) => setRole(itemValue)}>
-            <Picker.Item label="Select Role" value="" />
-            <Picker.Item label="Admin" value="admin" />
-            <Picker.Item label="Nurse" value="nurse" />
-            <Picker.Item label="Doctor" value="doctor" />
-            <Picker.Item label="Pharmacist" value="pharmacist" />
-            <Picker.Item label="Receptionist" value="receptionist" />
-        </Picker> */}
         <TextInput
           placeholder="Username"
           style={styles.input}
@@ -152,11 +140,6 @@ const styles = StyleSheet.create({
   forgotPassword: {
     color: '#2974D3',
     fontWeight: '500',
-    marginVertical: 5,
-  },
-  registerLink: {
-    fontSize: 15,
-    color: 'black',
     marginVertical: 5,
   },
 });

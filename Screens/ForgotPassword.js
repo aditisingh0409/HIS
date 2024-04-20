@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import img1 from './img1.jpg';
-import { Center } from "native-base";
 import axios from "axios";
 
-const ForgotPasswordScreen = (props) => {
+const ForgotPasswordScreen = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
 
   const ResetPassword = async (e) => {
@@ -23,7 +24,7 @@ const ForgotPasswordScreen = (props) => {
         }
     });
       console.log("API response: "+JSON.stringify(response.data));
-      props.navigation.navigate("Login");
+      navigation.navigate("Login");
     }
     catch(err){
       console.error(`Error! ${JSON.stringify(err.response)}`);
@@ -35,7 +36,8 @@ const ForgotPasswordScreen = (props) => {
     if (email === '' || email === null) {
       result = false;
       alert('Please Enter Email');
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } 
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       result = false;
       alert('Please Enter a Valid Email');
     }
@@ -44,7 +46,7 @@ const ForgotPasswordScreen = (props) => {
 
   const onPressLogin = () => {
     console.log("Login");
-    props.navigation.navigate("Login");
+    navigation.navigate("Login");
   }
 
   return (
