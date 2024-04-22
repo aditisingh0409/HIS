@@ -45,7 +45,7 @@ function Navbar({ Toggle }) {
         </TouchableOpacity>
       </View>
 
-      <PaperProvider>
+      {/* <PaperProvider>
         <View style={styles.profileContainer}>
           <Menu
             visible={visible}
@@ -58,7 +58,7 @@ function Navbar({ Toggle }) {
             <Menu.Item onPress={onPressLogout} title="Logout" />
           </Menu>
         </View>
-      </PaperProvider>
+      </PaperProvider> */}
     </View>
   );
 }

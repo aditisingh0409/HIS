@@ -56,9 +56,9 @@ export default function Doctor() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {toggle && <Sidebar Toggle={Toggle} />}
+        {/*{toggle && <Sidebar Toggle={Toggle} />}*/}
         <View style={styles.content}>
-          <Navbar Toggle={Toggle} />
+          {/* <Navbar Toggle={Toggle} /> */}
           <View style={styles.dropdownMenu}>
             {isOpen && (
               <View style={styles.dropdownContent}>

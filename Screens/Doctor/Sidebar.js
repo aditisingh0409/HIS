@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 function Sidebar({ Toggle }) {
@@ -19,12 +20,23 @@ function Sidebar({ Toggle }) {
   const onPressPatientList = () => {
     console.log("PatientList");
     navigation.navigate("PatientList");
+  } 
+  
+  const onPressUpdateProfile = () => {
+    console.log("Update Profile");
+    navigation.navigate("Update Profile");
   }
   
-  const onPressAddDiagnosis = () => {
-    console.log("AddDiagnosis");
-    navigation.navigate("AddDiagnosis");
+  const onPressChangePassword = () => {
+    console.log("Change Password");
+    navigation.navigate("Change Password");
   }
+
+  const onPressLogout = () => {
+    console.log("Login");
+    navigation.navigate("Login");
+  }
+ 
 
   return (
     <View style={[styles.sidebar, !isOpen && styles.closedSidebar]}>
@@ -41,8 +53,15 @@ function Sidebar({ Toggle }) {
         <TouchableOpacity style={styles.menuItem} onPress={onPressPatientList}>
           <Text style={styles.menuItemIcon}>Patient List</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={onPressAddDiagnosis}>
-          <Text style={styles.menuItemIcon}>Add Diagnosis</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={onPressUpdateProfile}>
+          <Text style={styles.menuItemIcon}>Update Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={onPressChangePassword}>
+          <Text style={styles.menuItemIcon}>Change Password</Text>
+        </TouchableOpacity>
+        <Divider />
+        <TouchableOpacity style={styles.menuItem} onPress={onPressLogout}>
+          <Text style={styles.menuItemIcon}>Logout</Text>
         </TouchableOpacity>
       </View>
     </View>
