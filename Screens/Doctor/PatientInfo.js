@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
 import { useNavigation } from '@react-navigation/native';
 
 export default function PInfo() {
@@ -20,13 +18,7 @@ export default function PInfo() {
   return (
     <View style={styles.container}>
         <View style={styles.row}>
-        {toggle && (
-          <View style={styles.sidebarContainer}>
-            <Sidebar Toggle={Toggle} />
-          </View>
-        )}
         <View style={styles.content}>
-            <Navbar Toggle={Toggle} />
             <View style={styles.profileContainer}>
               <Image source={require('./img1.jpg')} style={styles.profileImage} />
               <View style={styles.infoContainer}>

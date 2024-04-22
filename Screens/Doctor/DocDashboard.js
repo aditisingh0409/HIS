@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
 import Profile from './ProfilePhoto';
 import Patients from './Patients';
 
@@ -56,9 +54,7 @@ export default function Doctor() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/*{toggle && <Sidebar Toggle={Toggle} />}*/}
         <View style={styles.content}>
-          {/* <Navbar Toggle={Toggle} /> */}
           <View style={styles.dropdownMenu}>
             {isOpen && (
               <View style={styles.dropdownContent}>

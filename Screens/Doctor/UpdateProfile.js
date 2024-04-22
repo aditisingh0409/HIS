@@ -37,8 +37,8 @@ const UpdateProfileScreen = (props) => {
   };
 
   const onPressCancel = () => {
-    console.log("DocDashboard");
-    navigation.navigate("DocDashboard");
+    console.log("SettingsScreen");
+    navigation.navigate("SettingsScreen");
   }
 
   return (

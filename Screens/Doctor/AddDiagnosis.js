@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
 
 export default function AddDiagnosis() {
   const [toggle, setToggle] = useState(false);
@@ -13,13 +11,7 @@ export default function AddDiagnosis() {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        {toggle && (
-          <View style={styles.sidebarContainer}>
-            <Sidebar Toggle={Toggle} />
-          </View>
-        )}
         <View style={styles.content}>
-          <Navbar Toggle={Toggle} />
           <Text style={styles.heading}>Add Diagnosis</Text>
           <View style={styles.inputContainer}>
             <View style={styles.inputRow}>

@@ -60,8 +60,8 @@ const LoginScreen = () => {
   };
 
   const onPressForgotPassword = () => {
-    console.log("Forgot Password");
-    navigation.navigate("Forgot Password");
+    console.log("ForgotPassword");
+    navigation.navigate("ForgotPassword");
   }
 
   return (
