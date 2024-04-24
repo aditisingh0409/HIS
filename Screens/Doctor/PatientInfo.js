@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 export default function PInfo() {
   const [toggle, setToggle] = useState(false);
@@ -9,7 +11,7 @@ export default function PInfo() {
   const Toggle = () => {
     setToggle(!toggle);
   };
-
+    
   const onPressAddDiagnosis = () => {
     console.log("AddDiagnosis");
     navigation.navigate("AddDiagnosis");
@@ -57,6 +59,7 @@ export default function PInfo() {
               </View>
             </View>
           </View>
+          <></>
         </View>
     </View>
   );

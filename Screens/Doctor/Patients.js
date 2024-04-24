@@ -15,9 +15,11 @@ const Patients = ({ patients }) => {
       <Text style={styles.heading}>List of Patients</Text>
       <View style={styles.table}>
         <View style={styles.tableHeaderRow}>
-          <Text style={styles.tableHeader}>Profile Picture</Text>
-          <Text style={styles.tableHeader1}>Patient ID</Text>
-          <Text style={styles.tableHeader}>Name</Text>
+          <Text style={styles.tableHeader}>Patient ID</Text>
+          <Text style={styles.tableHeader}>First Name</Text>
+          <Text style={styles.tableHeader}>Last Name</Text>
+          <Text style={styles.tableHeader}>Gender</Text>
+          <Text style={styles.tableHeader}>Aadhar</Text>
         </View>
         {patients.map(patient => (
           <TouchableOpacity key={patient.id} onPress={onPressPatientInfo}>
@@ -57,10 +59,6 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flex: 1,
-    fontWeight: 'bold',
-  },
-  tableHeader1: {
-    flex: 2,
     fontWeight: 'bold',
   },
   tableRow: {

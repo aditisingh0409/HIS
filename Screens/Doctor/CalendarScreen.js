@@ -6,34 +6,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const CalendarScreen = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const handlePrevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-  };
-
-  const handleNextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-  };
-
-  const renderArrow = (direction) => (
-    <TouchableOpacity onPress={direction === 'left' ? handlePrevMonth : handleNextMonth}>
-      <Icon
-        name={direction === 'left' ? 'chevron-left' : 'chevron-right'}
-        size={30}
-        color="#007AFF"
-      />
-    </TouchableOpacity>
-  );
-
   // Get today's date in YYYY-MM-DD format
   const todayDate = new Date().toISOString().slice(0, 10);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.calendarContainer}>
-        <View style={styles.arrowContainer}>
-          {renderArrow('left')}
-          {renderArrow('right')}
-        </View>
         <Calendar
           key={currentMonth.getTime()} // Unique key based on currentMonth
           current={currentMonth.toISOString().slice(0, 7)}

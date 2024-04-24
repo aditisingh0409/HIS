@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Profile from './ProfilePhoto';
 import Patients from './Patients';
+import axios from 'axios';
 
 export default function Doctor() {
   const [toggle, setToggle] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const [patients, setPatients] = useState([]); // State variable to hold patients data
 
   const Toggle = () => {
     setToggle(!toggle);
@@ -15,38 +18,54 @@ export default function Doctor() {
     setIsOpen(!isOpen);
   };
 
-  const patients = [
-    {
-        id: 1,
-        name: "John Doe",
-        profilePhoto: require('../Images/images1.jpeg'),
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        profilePhoto: require('../Images/images2.jpeg'),
-      },
-      {
-        id: 3,
-        name: "John Smith",
-        profilePhoto: require('../Images/images3.jpeg'),
-      },
-      {
-        id: 4,
-        name: "Jane Doe",
-        profilePhoto: require('../Images/images4.jpeg'),
-      },
-      {
-        id: 5,
-        name: "Doe Jane",
-        profilePhoto: require('../Images/images2.jpeg'),
-      },
-      {
-        id: 6,
-        name: "Smith John",
-        profilePhoto: require('../Images/images1.jpeg'),
-      },
-  ];
+  const fetchPatients = async () => {
+    try {
+      // Make the API call to fetch patients data
+      const response = await axios.get('https://present-neat-mako.ngrok-free.app/his/patient/viewLivePatients?role=DOCTOR&isOP=0&userId=f');
+      // Update the state variable with the fetched patients data
+      setPatients(response.data);
+    } catch (error) {
+      console.log('Error fetching patients:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPatients(); // Fetch patients data when the component mounts
+  }, []);
+
+
+  // const patients = [
+  //   {
+  //       id: 1,
+  //       name: "John Doe",
+  //       profilePhoto: require('../Images/images1.jpeg'),
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "Jane Smith",
+  //       profilePhoto: require('../Images/images2.jpeg'),
+  //     },
+  //     {
+  //       id: 3,
+  //       name: "John Smith",
+  //       profilePhoto: require('../Images/images3.jpeg'),
+  //     },
+  //     {
+  //       id: 4,
+  //       name: "Jane Doe",
+  //       profilePhoto: require('../Images/images4.jpeg'),
+  //     },
+  //     {
+  //       id: 5,
+  //       name: "Doe Jane",
+  //       profilePhoto: require('../Images/images2.jpeg'),
+  //     },
+  //     {
+  //       id: 6,
+  //       name: "Smith John",
+  //       profilePhoto: require('../Images/images1.jpeg'),
+  //     },
+  // ];
 
   return (
       <View style={styles.container}>

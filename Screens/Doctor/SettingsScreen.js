@@ -77,3 +77,43 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
+
+// import React from 'react';
+// import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
+
+// const SettingsScreen = () => {
+//   const navigation = useNavigation();
+
+//   const openDrawer = () => {
+//     navigation.openDrawer();
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <TouchableOpacity style={styles.openDrawerButton} onPress={openDrawer}>
+//         <Text style={styles.openDrawerButtonText}>Open Drawer</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   openDrawerButton: {
+//     backgroundColor: 'blue',
+//     paddingVertical: 10,
+//     paddingHorizontal: 20,
+//     borderRadius: 5,
+//   },
+//   openDrawerButtonText: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//   },
+// });
+
+// export default SettingsScreen;

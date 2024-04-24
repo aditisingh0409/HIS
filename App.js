@@ -22,6 +22,7 @@ const StackNav = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="AppNavigation" component={AppNavigation} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="DocDashboard" component={DocDashboard} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="AddDiagnosis" component={AddDiagnosis} />
       <Stack.Screen name="InPatientList" component={InPatientList} />

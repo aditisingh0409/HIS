@@ -1,60 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Profile from './ProfilePhoto';
 import Patients from './Patients';
+import AppNavigation from '../../AppNavigation';
+import axios from 'axios'; // Import axios for making API calls
 
 export default function Doctor() {
-  const [toggle, setToggle] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  const Toggle = () => {
-    setToggle(!toggle);
-  };
+  const [patients, setPatients] = useState([]); // State variable to hold patients data
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
   };
 
-  const inpatients = 10;
-  const outpatients = 20;
+  const [IpCount, setIpCount] = useState(0);
+  const [OpCount, setOpCount] = useState(0);
 
-  const patients = [
-    {
-      id: 1,
-      name: "John Doe",
-      profilePhoto: require('../Images/images1.jpeg'),
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      profilePhoto: require('../Images/images2.jpeg'),
-    },
-    {
-      id: 3,
-      name: "John Smith",
-      profilePhoto: require('../Images/images3.jpeg'),
-    },
-    {
-      id: 4,
-      name: "Jane Doe",
-      profilePhoto: require('../Images/images4.jpeg'),
-    },
-    {
-      id: 5,
-      name: "Doe Jane",
-      profilePhoto: require('../Images/images2.jpeg'),
-    },
-    {
-      id: 6,
-      name: "Smith John",
-      profilePhoto: require('../Images/images1.jpeg'),
-    },
-  ];
+  const fetchDoc = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+
+      const headers = {
+        Authorization: token,
+        "ngrok-skip-browser-warning": "true",
+      };
+      console.log("User Id : ", userId);
+
+      const response = await axios.get(
+        'https://present-neat-mako.ngrok-free.app/his/doc/home?userId=' +
+        userId,
+        {
+          headers: headers,
+        }
+      );
+
+      // Check if response status is successful before setting state
+      if (response.status === 200) {
+        console.log("managed somehow");
+        fetchPatients(); // Fetch patients data when the component mounts
+        setOpCount(response.data.opPatient);
+        setIpCount(response.data.ipPatient);
+      } else {
+        throw new Error("Failed to fetch data");
+      }
+    } catch (error) {
+      console.log("Hello123")
+      console.log("Error here", error);
+      // toast.error("Error from Doctor. Please try again.");
+    }
+  };
+
+  const fetchPatients = async () => {
+    try {
+      // Make the API call to fetch patients data
+      const response = await axios.get('https://present-neat-mako.ngrok-free.app/his/patient/viewLivePatients?role=DOCTOR&isOP=1&userId=f');
+      
+      console.log("API response of patient list : "+JSON.stringify(response.data))
+      
+      // Update the state variable with the fetched patients data
+      setPatients(response.data.response);
+    } catch (error) {
+      console.log('Error fetching patients:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDoc();
+  }, []);
 
   return (
-    <ScrollView>
       <View style={styles.container}>
         <View style={styles.content}>
+          {/* Profile Dropdown */}
           <View style={styles.dropdownMenu}>
             {isOpen && (
               <View style={styles.dropdownContent}>
@@ -66,36 +84,28 @@ export default function Doctor() {
           <View style={styles.pieChartsContainer}>
             <View style={styles.circle}>
               <View style={styles.innerCircle}>
-                <Text style={styles.number}>{inpatients}</Text>
+                <Text style={styles.number}>{IpCount}</Text>
               </View>
               <Text style={styles.label}>Inpatients</Text>
             </View>
             <View style={styles.circle}>
               <View style={styles.innerCircle}>
-                <Text style={styles.number}>{outpatients}</Text>
+                <Text style={styles.number}>{OpCount}</Text>
               </View>
               <Text style={styles.label}>Outpatients</Text>
             </View>
           </View>
-          {/* Patient List */}
+          {/* Patients Table */}
           <View style={styles.patientsContainer}>
             <Patients patients={patients} />
           </View>
         </View>
       </View>
-    </ScrollView>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   container: {
     flex: 1,
     flexDirection: 'row',

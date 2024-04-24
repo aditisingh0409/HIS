@@ -22,14 +22,16 @@ const LoginScreen = () => {
           role: role
         });
 
-        console.log("API response: ", response.data);
+        console.log("API response: ", response);
 
         if (response.data.response === "SUCCESS") {
           try {
               alert('Login Successful');
               console.log("DocDashboard");
               navigation.navigate("DocDashboard");
-              sessionStorage.setItem('username', username);
+              localStorage.setItem('userId',response.data.userId);
+              localStorage.setItem('role',response.data.role);
+              localStorage.setItem('token','Bearer ' + response.data.token);
             }
             catch(error) {
               console.error(error);
