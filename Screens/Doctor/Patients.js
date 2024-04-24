@@ -15,18 +15,18 @@ const Patients = ({ patients }) => {
       <Text style={styles.heading}>List of Patients</Text>
       <View style={styles.table}>
         <View style={styles.tableHeaderRow}>
-          <Text style={styles.tableHeader}>Patient ID</Text>
+          <Text style={styles.tableHeader}>Aadhaar ID</Text>
           <Text style={styles.tableHeader}>First Name</Text>
           <Text style={styles.tableHeader}>Last Name</Text>
-          <Text style={styles.tableHeader}>Gender</Text>
-          <Text style={styles.tableHeader}>Aadhar</Text>
+          <Text style={styles.tableHeader}>Remarks</Text>
         </View>
         {patients.map(patient => (
           <TouchableOpacity key={patient.id} onPress={onPressPatientInfo}>
             <View style={styles.tableRow}>
-              <Image source={patient.profilePhoto} style={styles.profileImage} />
-              <Text style={styles.tableData}>{patient.id}</Text>
-              <Text style={styles.tableData}>{patient.name}</Text>
+              <Text style={styles.tableData}>{patient.aadhaar}</Text>
+              <Text style={styles.tableData}>{patient.firstName}</Text>
+              <Text style={styles.tableData}>{patient.lastName}</Text>
+              <Text style={styles.tableData}>{patient.remark}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -60,18 +60,13 @@ const styles = StyleSheet.create({
   tableHeader: {
     flex: 1,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   tableRow: {
     flexDirection: 'row',
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
-  },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10,
   },
   tableData: {
     flex: 1,

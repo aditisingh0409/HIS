@@ -10,9 +10,8 @@ export default function Doctor() {
 
   const [patients, setPatients] = useState([]); // State variable to hold patients data
 
-  const Toggle = () => {
-    setToggle(!toggle);
-  };
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
@@ -20,52 +19,31 @@ export default function Doctor() {
 
   const fetchPatients = async () => {
     try {
+      const headers = {
+        Authorization: token,
+        "ngrok-skip-browser-warning": "true",
+      };
+      console.log("User Id : ", userId);
+
       // Make the API call to fetch patients data
-      const response = await axios.get('https://present-neat-mako.ngrok-free.app/his/patient/pastHistory?role=DOCTOR&userId=f');
-      // Update the state variable with the fetched patients data
-      setPatients(response.data);
+      const response = await axios.get(
+        'https://present-neat-mako.ngrok-free.app/his/patient/pastHistory?role=DOCTOR&userId='
+      + userId,
+      {
+        headers: headers,  
+      }
+    );
+    console.log("API response of patient list : "+JSON.stringify(response.data))
+    
+    setPatients(response.data.response);
     } catch (error) {
       console.log('Error fetching patients:', error);
     }
-  };
+  };      
 
   useEffect(() => {
     fetchPatients(); // Fetch patients data when the component mounts
   }, []);
-
-
-  // const patients = [
-  //   {
-  //       id: 1,
-  //       name: "John Doe",
-  //       profilePhoto: require('../Images/images1.jpeg'),
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "Jane Smith",
-  //       profilePhoto: require('../Images/images2.jpeg'),
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "John Smith",
-  //       profilePhoto: require('../Images/images3.jpeg'),
-  //     },
-  //     {
-  //       id: 4,
-  //       name: "Jane Doe",
-  //       profilePhoto: require('../Images/images4.jpeg'),
-  //     },
-  //     {
-  //       id: 5,
-  //       name: "Doe Jane",
-  //       profilePhoto: require('../Images/images2.jpeg'),
-  //     },
-  //     {
-  //       id: 6,
-  //       name: "Smith John",
-  //       profilePhoto: require('../Images/images1.jpeg'),
-  //     },
-  // ];
 
   return (
       <View style={styles.container}>

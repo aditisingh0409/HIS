@@ -8,6 +8,9 @@ import axios from 'axios'; // Import axios for making API calls
 export default function Doctor() {
   const [isOpen, setIsOpen] = useState(false);
   const [patients, setPatients] = useState([]); // State variable to hold patients data
+  
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
@@ -18,9 +21,6 @@ export default function Doctor() {
 
   const fetchDoc = async () => {
     try {
-      const userId = localStorage.getItem("userId");
-      const token = localStorage.getItem("token");
-
       const headers = {
         Authorization: token,
         "ngrok-skip-browser-warning": "true",
@@ -28,8 +28,8 @@ export default function Doctor() {
       console.log("User Id : ", userId);
 
       const response = await axios.get(
-        'https://present-neat-mako.ngrok-free.app/his/doc/home?userId=' +
-        userId,
+        'https://present-neat-mako.ngrok-free.app/his/doc/home?userId=' 
+        + userId,
         {
           headers: headers,
         }
@@ -38,10 +38,12 @@ export default function Doctor() {
       // Check if response status is successful before setting state
       if (response.status === 200) {
         console.log("managed somehow");
-        fetchPatients(); // Fetch patients data when the component mounts
+        console.log("API response of user : "+JSON.stringify(response.data))
         setOpCount(response.data.opPatient);
         setIpCount(response.data.ipPatient);
-      } else {
+        fetchPatients(); // Fetch patients data when the component mounts
+      } 
+      else {
         throw new Error("Failed to fetch data");
       }
     } catch (error) {
@@ -53,8 +55,20 @@ export default function Doctor() {
 
   const fetchPatients = async () => {
     try {
+      const headers = {
+        Authorization: token,
+        "ngrok-skip-browser-warning": "true",
+      };
+      console.log("User Id : ", userId);
+
       // Make the API call to fetch patients data
-      const response = await axios.get('https://present-neat-mako.ngrok-free.app/his/patient/viewLivePatients?role=DOCTOR&isOP=1&userId=f');
+      const response = await axios.get(
+        'https://present-neat-mako.ngrok-free.app/his/patient/viewLivePatients?role=DOCTOR&isOP=1&userId='
+      + userId,
+      {
+        headers: headers,  
+      }
+    );
       
       console.log("API response of patient list : "+JSON.stringify(response.data))
       
