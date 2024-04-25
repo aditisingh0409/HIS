@@ -1,21 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Link, useLocation } from 'react-router-dom';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 
 export default function PInfo() {
-  const [toggle, setToggle] = useState(false);
   const navigation = useNavigation();
+  const route = useRoute();
+  
+  const [patient, setPatient] = useState([]);
+  
+  useEffect(()=>
+    {
+      fetchUsers();
+    },[]
+  );
 
-  const Toggle = () => {
-    setToggle(!toggle);
-  };
-    
+  const { admitId, aadhaar } = route.params;
+
   const onPressAddDiagnosis = () => {
     console.log("AddDiagnosis");
     navigation.navigate("AddDiagnosis");
   }
+
+  const onPressBack = () => {
+    console.log("DocDashboard");
+    navigation.navigate("DocDashboard");
+  }
+
+  const fetchUsers = async() =>{
+    try{
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('role');
+      
+      const headers = {
+        'Authorization': token,
+        'ngrok-skip-browser-warning': "true",
+      }
+      
+      const response = await axios.get(
+        `https://present-neat-mako.ngrok-free.app/his/patient/viewOneLivePatient?admitId=${admitId}&userId=${userId}&role=${role}`,
+        {
+          headers: headers
+        }
+      );
+      
+      setPatient(response.data.detail); 
+      console.log("Patient: " + JSON.stringify(patient))
+      console.log("api resp: " + JSON.stringify(response.data))
+    }
+    catch (error) {
+      console.log("Error", error);
+    } 
+  };
+
 
   return (
     <View style={styles.container}>
@@ -26,35 +64,50 @@ export default function PInfo() {
               <View style={styles.infoContainer}>
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
-                  <Text style={styles.label}>Name:</Text>
-                  <Text>John Doe</Text>
+                  <Text style={styles.label}>Aadhaar Number:</Text>
+                  <Text style={styles.label}>{patient.aadhaar}</Text>
                 </View>
                 <View style={styles.infoRow}>
-                  <Text style={styles.label}>Address:</Text>
-                  <Text>Bangalore</Text>
+                  <Text style={styles.label}>First Name:</Text>
+                  <Text style={styles.label}>{patient.firstName}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Last Name:</Text>
+                  <Text style={styles.label}>{patient.lastName}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Email:</Text>
-                  <Text>john_doe@gmail.com</Text>
+                  <Text style={styles.label}>{patient.email}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Phone:</Text>
-                  <Text>2587945278</Text>
+                  <Text style={styles.label}>{patient.phone}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Gender:</Text>
-                  <Text>Male</Text>
+                  <Text style={styles.label}>{patient.gender}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Patient Type:</Text>
+                  <Text style={styles.tableData}>{patient.patientType}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Date of Birth:</Text>
-                  <Text>28-08-1999</Text>
+                  <Text style={styles.tableData}>{patient.birthDate}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Blood group:</Text>
-                  <Text>B+</Text>
+                  <Text style={styles.label}>{patient.blood}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Address:</Text>
+                  <Text style={styles.label}>{patient.address}</Text>
                 </View>
                 <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
                   <Text style={styles.buttonText}>Add Diagnosis</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={onPressBack}>
+                  <Text style={styles.buttonText}>Back</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -125,6 +178,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: '500',
+    textAlign: 'center',
+  },
+  tableData: {
+    flex: 1,
     textAlign: 'center',
   },
 });

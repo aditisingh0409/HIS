@@ -5,10 +5,10 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 const Patients = ({ patients }) => {
   const navigation = useNavigation();
 
-  const onPressPatientInfo = () => {
-    console.log("PatientInfo");
-    navigation.navigate("PatientInfo");
-  }
+  const onPressPatientInfo = (patient) => {
+    console.log("PatientInfo", patient);
+    navigation.navigate("PatientInfo", {admitId:patient.admitId,aadhaar:patient.aadhaar});     
+  }  
 
   return (
     <View style={styles.container}>
@@ -21,7 +21,7 @@ const Patients = ({ patients }) => {
           <Text style={styles.tableHeader}>Remarks</Text>
         </View>
         {patients.map(patient => (
-          <TouchableOpacity key={patient.id} onPress={onPressPatientInfo}>
+          <TouchableOpacity key={patient.aadhaar} onPress={() => onPressPatientInfo(patient)}>
             <View style={styles.tableRow}>
               <Text style={styles.tableData}>{patient.aadhaar}</Text>
               <Text style={styles.tableData}>{patient.firstName}</Text>

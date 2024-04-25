@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
 import Profile from './ProfilePhoto';
 import Patients from './Patients';
-import AppNavigation from '../../AppNavigation';
 import axios from 'axios'; // Import axios for making API calls
 
 export default function Doctor() {
@@ -37,7 +36,6 @@ export default function Doctor() {
 
       // Check if response status is successful before setting state
       if (response.status === 200) {
-        console.log("managed somehow");
         console.log("API response of user : "+JSON.stringify(response.data))
         setOpCount(response.data.opPatient);
         setIpCount(response.data.ipPatient);
@@ -47,9 +45,7 @@ export default function Doctor() {
         throw new Error("Failed to fetch data");
       }
     } catch (error) {
-      console.log("Hello123")
       console.log("Error here", error);
-      // toast.error("Error from Doctor. Please try again.");
     }
   };
 
@@ -115,9 +111,8 @@ export default function Doctor() {
           </View>
         </View>
       </View>
-    
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
