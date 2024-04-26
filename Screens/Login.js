@@ -28,7 +28,9 @@ const LoginScreen = () => {
           try {
               alert('Login Successful');
               console.log("DocDashboard");
-              navigation.navigate("DocDashboard");
+              navigation.navigate("AppNavigation");
+              
+              console.log("Navigate to DocDashboard");
               localStorage.setItem('userId',response.data.userId);
               localStorage.setItem('role',response.data.role);
               localStorage.setItem('token','Bearer ' + response.data.token);

@@ -8,6 +8,7 @@ export default function PInfo() {
   const route = useRoute();
   
   const [patient, setPatient] = useState([]);
+  const [diagnosis, setDiagnosis] = useState([]);
   
   useEffect(()=>
     {
@@ -46,7 +47,35 @@ export default function PInfo() {
       );
       
       setPatient(response.data.detail); 
+      fetchDiagnosis();
       console.log("Patient: " + JSON.stringify(patient))
+      console.log("api resp: " + JSON.stringify(response.data))
+    }
+    catch (error) {
+      console.log("Error", error);
+    } 
+  };
+
+  const fetchDiagnosis = async() =>{
+    try{
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('role');
+      
+      const headers = {
+        'Authorization': token,
+        'ngrok-skip-browser-warning': "true",
+      }
+      
+      const response = await axios.get(
+        `https://present-neat-mako.ngrok-free.app/his/patient/viewOneLivePatient?admitId=${admitId}&userId=${userId}&role=${role}`,
+        {
+          headers: headers
+        }
+      );
+      
+      setDiagnosis(response.data.list); 
+      console.log("Patient: " + JSON.stringify(diagnosis))
       console.log("api resp: " + JSON.stringify(response.data))
     }
     catch (error) {
@@ -106,6 +135,27 @@ export default function PInfo() {
                 <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
                   <Text style={styles.buttonText}>Add Diagnosis</Text>
                 </TouchableOpacity>
+                <View style={styles.container}>
+                  <Text style={styles.heading}>List of Past Diagnosis</Text>
+                  <View style={styles.table}>
+                    <View style={styles.tableHeaderRow}>
+                      <Text style={styles.tableHeader}>Aadhaar ID</Text>
+                      <Text style={styles.tableHeader}>First Name</Text>
+                      <Text style={styles.tableHeader}>Last Name</Text>
+                      <Text style={styles.tableHeader}>Remarks</Text>
+                    </View>
+                    {diagnosis.map(diagnosis => (
+                      <TouchableOpacity key={diagnosis.aadhaar} onPress={() => onPressDiagnosisInfo(diagnosis)}>
+                        <View style={styles.tableRow}>
+                          <Text style={styles.tableData}>{diagnosis.aadhaar}</Text>
+                          <Text style={styles.tableData}>{diagnosis.firstName}</Text>
+                          <Text style={styles.tableData}>{diagnosis.lastName}</Text>
+                          <Text style={styles.tableData}>{diagnosis.remark}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
                 <TouchableOpacity style={styles.button} onPress={onPressBack}>
                   <Text style={styles.buttonText}>Back</Text>
                 </TouchableOpacity>

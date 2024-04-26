@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
 import Profile from './ProfilePhoto';
 import Patients from './Patients';
+import AppNavigation from '../../AppNavigation';
 import axios from 'axios'; // Import axios for making API calls
 
 export default function Doctor() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [patients, setPatients] = useState([]); // State variable to hold patients data
   
   const userId = localStorage.getItem("userId");
@@ -13,6 +14,11 @@ export default function Doctor() {
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleNavigator = () => {
+    console.log("Bottom")
+    console.log("Navigation")
   };
 
   const [IpCount, setIpCount] = useState(0);
@@ -83,13 +89,15 @@ export default function Doctor() {
       <View style={styles.container}>
         <View style={styles.content}>
           {/* Profile Dropdown */}
-          <View style={styles.dropdownMenu}>
+          {/* <View style={styles.dropdownMenu}>
             {isOpen && (
               <View style={styles.dropdownContent}>
                 <Profile Toggle={toggleProfile} />
               </View>
             )}
           </View>
+           */}
+          < AppNavigation />
           {/* Number of Inpatients and Outpatients */}
           <View style={styles.pieChartsContainer}>
             <View style={styles.circle}>

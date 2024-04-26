@@ -12,20 +12,24 @@ import CalendarScreen from "./Screens/Doctor/CalendarScreen";
 import SettingsScreen from "./Screens/Doctor/SettingsScreen";
 import UpdateProfile from "./Screens/Doctor/UpdateProfile";
 import ChangePassword from "./Screens/Doctor/ChangePassword";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AppNavigation from './AppNavigation';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigation from './AppNavigation';
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const StackNav = () => {
-  const Stack = createStackNavigator();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="Login" headerMode="none">
+      {/* <Stack.Screen name="Login" component={Login} /> */}
       <Stack.Screen name="AppNavigation" component={AppNavigation} />
-      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="DocDashboard" component={DocDashboard} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="AddDiagnosis" component={AddDiagnosis} />
-      <Stack.Screen name="InPatientList" component={InPatientList} />
+      <Stack.Screen name="InPatientList" component={InPatientList} /> 
       <Stack.Screen name="PastPatientList" component={PastPatientList} />
       <Stack.Screen name="PatientInfo" component={PatientInfo} />
       <Stack.Screen name="DoctorInfo" component={DoctorInfo} />
@@ -33,16 +37,17 @@ const StackNav = () => {
       <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      
     </Stack.Navigator>
   );
-}
+};
 
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
-        <StackNav>
-          <AppNavigation />
-        </StackNav>
+      <StackNav />
     </NavigationContainer>
   );
-}
+};
+
+export default App;
