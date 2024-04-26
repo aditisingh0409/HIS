@@ -28,11 +28,11 @@ const AddDiagnosis = () => {
         setAdmitId(locationState.admitId);
         setAadhaar(locationState.aadhaar);
 
-        if (!userId || !token || !role) {
-          navigation.navigate('Login'); // Navigate to login if user data is missing
-        } else {
-          setIsLoggedIn(true); // Set isLoggedIn to true
-        }
+        // if (!userId || !token || !role) {
+        //   navigation.navigate('Login'); // Navigate to login if user data is missing
+        // } else {
+        //   setIsLoggedIn(true); // Set isLoggedIn to true
+        // }
       } catch (error) {
         console.error('Error:', error.message);
       }
@@ -115,40 +115,37 @@ const AddDiagnosis = () => {
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.title}>Add New Diagnosis</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Remarks"
-          value={remarks}
-          onChangeText={text => setRemarks(text)}
-          multiline
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Discharge"
-          value={discharge}
-          onChangeText={text => setDischarge(text)}
-          keyboardType="numeric"
-        />
-        <View style={styles.row}>
+        <View style={styles.inputContainer}>
+          <Text>Remarks</Text>
           <TextInput
-            style={[styles.textInput, { flex: 1, marginRight: 10 }]}
-            placeholder="Medicine Name"
+            style={styles.input}
+            value={remarks}
+            onChangeText={text => setRemarks(text)}
+            multiline
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text>Medicine Name</Text>
+          <TextInput
+            style={styles.input}
             value={medicineName}
             onChangeText={text => setMedicineName(text)}
           />
+          <Text>Count</Text>
           <TextInput
-            style={[styles.textInput, { width: 60, marginRight: 10 }]}
-            placeholder="Count"
+            style={styles.input}
             value={count.toString()}
             onChangeText={text => setCount(parseInt(text))}
             keyboardType="numeric"
           />
-          <Button title="Add" onPress={handleAddMedicine} />
+          <Button title="Add" onPress={handleAdd} />
         </View>
-        <Text style={styles.subTitle}>Added Medicines:</Text>
-        {addedMedicines.map((medicine, index) => (
-          <Text key={index}>{`${medicine.name}: ${medicine.count}`}</Text>
-        ))}
+        <View style={styles.medicineList}>
+          <Text style={styles.medicineListTitle}>Added Medicines:</Text>
+          {Object.entries(medData).map(([key, value]) => (
+            <Text key={key}>{`${key}: ${value}`}</Text>
+          ))}
+        </View>
         <Button title="Submit" onPress={handleSubmit} />
       </View>
     </ScrollView>
@@ -159,23 +156,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#ECE3F0',
   },
   title: {
     fontSize: 20,
     marginBottom: 10,
   },
-  textInput: {
+  inputContainer: {
+    marginBottom: 20,
+  },
+  input: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+  medicineList: {
+    marginBottom: 20,
   },
-  subTitle: {
+  medicineListTitle: {
     fontSize: 16,
     marginBottom: 10,
   },
