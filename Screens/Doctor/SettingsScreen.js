@@ -7,6 +7,11 @@ import backgroundImage from './img1.jpg';
 const SettingsScreen = () => {
   const navigation = useNavigation();
   
+  const onPressViewProfile = () => {
+    console.log("DocProfile");
+    navigation.navigate("DocProfile");
+  }
+  
   const onPressUpdateProfile = () => {
     console.log("UpdateProfile");
     navigation.navigate("UpdateProfile");
@@ -26,6 +31,9 @@ const SettingsScreen = () => {
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.heading}>Settings</Text>
+        <TouchableOpacity style={styles.button} onPress={onPressViewProfile}>
+            <Text style={styles.buttonText}>View Profile</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={onPressUpdateProfile}>
             <Text style={styles.buttonText}>Update Profile</Text>
           </TouchableOpacity>
