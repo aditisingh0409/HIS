@@ -1,100 +1,35 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import DocDashboard from "./Screens/Doctor/DocDashboard"
-import InPatientList from "./Screens/Doctor/InPatientList";
-import PastPatientList from "./Screens/Doctor/PastPatientList";
-import CalendarScreen from "./Screens/Doctor/CalendarScreen";
-import SettingsScreen from "./Screens/Doctor/SettingsScreen";
+import { View, Text, StyleSheet } from 'react-native'
+import React from 'react'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const Tab = createBottomTabNavigator();
 
-const AppNavigation = () => (
-  <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerRight: () => (
-        <View>
-          <Image source={require('./Screens/Doctor/img1.jpg')} style={{width: 50, height: 50, borderRadius: 50, marginRight: 10,}} />
-        </View>
-      ),
-      headerRightContainerStyle: {
-        paddingRight: 10,
-      },
-      headerTitle: '', // Hides the screen name
-    })}
-  >
-    <Tab.Screen name="DocDashboard" component={DocDashboard} />
-    <Tab.Screen name="InPatientList" component={InPatientList} />
-    <Tab.Screen name="PastPatientList" component={PastPatientList} />
-    <Tab.Screen name="CalendarScreen" component={CalendarScreen} />
-    <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
-  </Tab.Navigator>
-);
+const NavigationBar = () => {
 
-export default AppNavigation;
+    const navigation = useNavigation();
+    const route = useRoute();
 
-// import React from 'react';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import DocDashboard from './Screens/Doctor/DocDashboard';
-// import InPatientList from './Screens/Doctor/InPatientList';
-// import PastPatientList from './Screens/Doctor/PastPatientList';
-// import CalendarScreen from './Screens/Doctor/CalendarScreen';
-// import SettingsScreen from './Screens/Doctor/SettingsScreen';
+  return (
+    <View style={styles.bar}>        
+      <MaterialCommunityIcons name="home-outline" size={26} color="black" onPress={() => navigation.navigate("DocDashboard")}/>
+      <MaterialCommunityIcons name="account-group-outline" size={26} color="black" onPress={() => navigation.navigate("InPatientList")}/>
+      <MaterialCommunityIcons name="history" size={24} color="black" onPress={() => navigation.navigate("PastPatientList")}/>
+      <MaterialCommunityIcons name="calendar-outline" size={26} color="black" onPress={() => navigation.navigate("CalendarScreen")}/>
+      <MaterialCommunityIcons name="cog-outline" size={26} color="black" onPress={() => navigation.navigate("SettingsScreen")}/>
+    </View>
+  )
+}
 
-// const Tab = createBottomTabNavigator();
-// const Stack = createStackNavigator();
+const styles = StyleSheet.create({
+  bar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 10,  
+  }
+});
 
-// const DashboardStack = () => (
-//   <Stack.Navigator>
-//     <Stack.Screen name="Dashboard" component={DocDashboard} />
-//   </Stack.Navigator>
-// );
-
-// const InPatientListStack = () => (
-//   <Stack.Navigator>
-//     <Stack.Screen name="InPatientList" component={InPatientList} />
-//   </Stack.Navigator>
-// );
-
-// const PastPatientListStack = () => (
-//   <Stack.Navigator>
-//     <Stack.Screen name="PastPatientList" component={PastPatientList} />
-//   </Stack.Navigator>
-// );
-
-// const CalendarStack = () => (
-//   <Stack.Navigator>
-//     <Stack.Screen name="Calendar" component={CalendarScreen} />
-//   </Stack.Navigator>
-// );
-
-// const SettingsStack = () => (
-//   <Stack.Navigator>
-//     <Stack.Screen name="Settings" component={SettingsScreen} />
-//   </Stack.Navigator>
-// );
-
-// const AppNavigation = () => (
-//   <Tab.Navigator
-//     screenOptions={({ route }) => ({
-//       headerRight: () => (
-//         <View>
-//           <Image source={require('./Screens/Doctor/img1.jpg')} style={{width: 50, height: 50, borderRadius: 50, marginRight: 10,}} />
-//         </View>
-//       ),
-//       headerRightContainerStyle: {
-//         paddingRight: 10,
-//       },
-//       headerTitle: '', // Hides the screen name
-//     })}
-//   >
-//     <Tab.Screen name="Dashboard" component={DashboardStack} />
-//     <Tab.Screen name="InPatientList" component={InPatientListStack} />
-//     <Tab.Screen name="PastPatientList" component={PastPatientListStack} />
-//     <Tab.Screen name="Calendar" component={CalendarStack} />
-//     <Tab.Screen name="Settings" component={SettingsStack} />
-//   </Tab.Navigator>
-// );
-
-// export default AppNavigation;
+export default NavigationBar

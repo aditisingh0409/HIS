@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Profile from './ProfilePhoto';
 import Patients from './Patients';
+import AppNavigation from '../../AppNavigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 export default function Doctor() {
@@ -9,8 +11,8 @@ export default function Doctor() {
   const [isOpen, setIsOpen] = useState(false);
   const [patients, setPatients] = useState([]); // State variable to hold patients data
 
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
+  const userId = AsyncStorage.getItem("userId");
+  const token = AsyncStorage.getItem("token");
   
   const toggleProfile = () => {
     setIsOpen(!isOpen);
@@ -58,6 +60,8 @@ export default function Doctor() {
             <Patients patients={patients} />
           </View>
         </View>
+        
+        <AppNavigation />
       </View>
   );
 }
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: '100%',
   },
   content: {

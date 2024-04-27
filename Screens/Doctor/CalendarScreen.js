@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import AppNavigation from '../../AppNavigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CalendarScreen = () => {
@@ -29,6 +30,7 @@ const CalendarScreen = () => {
           }}
         />
       </View>
+      <AppNavigation />
     </SafeAreaView>
   );
 };

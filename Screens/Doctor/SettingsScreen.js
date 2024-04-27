@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AppNavigation from '../../AppNavigation';
 import backgroundImage from './img1.jpg'; 
 
 const SettingsScreen = () => {
@@ -35,6 +36,9 @@ const SettingsScreen = () => {
             <Text style={styles.buttonText}>Logout</Text>
           </TouchableOpacity>
       </View>
+      <View style={styles.navigation}>
+        <AppNavigation />
+      </View>
     </ImageBackground>
   );
 };
@@ -47,6 +51,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
   },
   container: {
     borderRadius: 20,
@@ -74,46 +79,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
+  navigation: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0, 
+    flexDirection: 'column',
+    width: '100%',
+  },
 });
 
 export default SettingsScreen;
-
-// import React from 'react';
-// import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
-
-// const SettingsScreen = () => {
-//   const navigation = useNavigation();
-
-//   const openDrawer = () => {
-//     navigation.openDrawer();
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <TouchableOpacity style={styles.openDrawerButton} onPress={openDrawer}>
-//         <Text style={styles.openDrawerButtonText}>Open Drawer</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   openDrawerButton: {
-//     backgroundColor: 'blue',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     borderRadius: 5,
-//   },
-//   openDrawerButtonText: {
-//     color: 'white',
-//     fontWeight: 'bold',
-//   },
-// });
-
-// export default SettingsScreen;

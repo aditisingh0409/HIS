@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import backgroundImage from './img1.jpg'; 
 
 const LoginScreen = () => {
@@ -31,9 +32,9 @@ const LoginScreen = () => {
               navigation.navigate("AppNavigation");
               
               console.log("Navigate to DocDashboard");
-              localStorage.setItem('userId',response.data.userId);
-              localStorage.setItem('role',response.data.role);
-              localStorage.setItem('token','Bearer ' + response.data.token);
+              AsyncStorage.setItem('userId',response.data.userId);
+              AsyncStorage.setItem('role',response.data.role);
+              AsyncStorage.setItem('token','Bearer ' + response.data.token);
             }
             catch(error) {
               console.error(error);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 export default function PInfo() {
@@ -30,9 +31,9 @@ export default function PInfo() {
 
   const fetchUsers = async() =>{
     try{
-      const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
-      const role = localStorage.getItem('role');
+      const userId = AsyncStorage.getItem('userId');
+      const token = AsyncStorage.getItem('token');
+      const role = AsyncStorage.getItem('role');
       
       const headers = {
         'Authorization': token,
@@ -58,9 +59,9 @@ export default function PInfo() {
 
   const fetchDiagnosis = async() =>{
     try{
-      const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
-      const role = localStorage.getItem('role');
+      const userId = AsyncStorage.getItem('userId');
+      const token = AsyncStorage.getItem('token');
+      const role = AsyncStorage.getItem('role');
       
       const headers = {
         'Authorization': token,
