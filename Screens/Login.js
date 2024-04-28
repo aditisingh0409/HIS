@@ -5,7 +5,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import backgroundImage from './img1.jpg'; 
 
-const LoginScreen = () => {
+const Login = () => {
   const navigation = useNavigation();
 
   const [username, setUsername] = useState('');
@@ -27,14 +27,12 @@ const LoginScreen = () => {
 
         if (response.data.response === "SUCCESS") {
           try {
-              alert('Login Successful');
-              console.log("DocDashboard");
-              navigation.navigate("AppNavigation");
-              
-              console.log("Navigate to DocDashboard");
               AsyncStorage.setItem('userId',response.data.userId);
               AsyncStorage.setItem('role',response.data.role);
               AsyncStorage.setItem('token','Bearer ' + response.data.token);
+              navigation.navigate("DocDashboard");
+              // alert('Login Successful');
+              console.log("DocDashboard");
             }
             catch(error) {
               console.error(error);

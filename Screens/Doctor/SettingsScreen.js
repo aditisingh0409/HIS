@@ -24,7 +24,7 @@ const SettingsScreen = () => {
   
   const onPressLogout = () => {
     console.log("Login");
-    navigation.navigate("Login");
+    navigation.replace("Login");
   }
 
   return (

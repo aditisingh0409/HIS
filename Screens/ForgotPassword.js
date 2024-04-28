@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import img1 from './img1.jpg';
 import axios from "axios";
 
-const ForgotPasswordScreen = () => {
+const ForgotPassword = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
 

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import backgroundImage from './img1.jpg';
 
-const ChangePasswordScreen = (props) => {
+const ChangePassword = (props) => {
   const navigation = useNavigation();
 
   const [currentPassword, setCurrentPassword] = useState('');

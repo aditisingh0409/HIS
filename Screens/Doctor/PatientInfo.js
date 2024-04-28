@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PastDiagnosis from './PastDiagnosis';
 import axios from 'axios';
 
-export default function PInfo() {
+export default function PatientInfo() {
   const navigation = useNavigation();
   const route = useRoute();
   
   const [patient, setPatient] = useState([]);
   const [diagnosis, setDiagnosis] = useState([]);
+  const { State } = route.params; // Destructure State from route.params
+
+  // Now you can access admitId and aadhaar from State object
+  const { admitId, aadhaar } = State;
   
   useEffect(()=>
     {
@@ -17,7 +22,13 @@ export default function PInfo() {
     },[]
   );
 
-  const { admitId, aadhaar } = route.params;
+  // const { admitId, aadhaar } = route.params;
+  // useEffect(() => {
+  //   if (route.params) {
+  //     const { admitId, aadhaar } = route.params;
+  //     fetchUsers(admitId);
+  //   }
+  // }, [route.params]);
 
   const onPressAddDiagnosis = () => {
     console.log("AddDiagnosis");
@@ -31,10 +42,11 @@ export default function PInfo() {
 
   const fetchUsers = async() =>{
     try{
-      const userId = AsyncStorage.getItem('userId');
-      const token = AsyncStorage.getItem('token');
-      const role = AsyncStorage.getItem('role');
-      
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      const role = await AsyncStorage.getItem('role');
+      // const admitId = await AsyncStorage.getItem('admitId');
+
       const headers = {
         'Authorization': token,
         'ngrok-skip-browser-warning': "true",
@@ -59,9 +71,10 @@ export default function PInfo() {
 
   const fetchDiagnosis = async() =>{
     try{
-      const userId = AsyncStorage.getItem('userId');
-      const token = AsyncStorage.getItem('token');
-      const role = AsyncStorage.getItem('role');
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      const role = await AsyncStorage.getItem('role');
+      const admitId = await AsyncStorage.getItem('admitId');
       
       const headers = {
         'Authorization': token,
@@ -76,7 +89,7 @@ export default function PInfo() {
       );
       
       setDiagnosis(response.data.list); 
-      console.log("Patient: " + JSON.stringify(diagnosis))
+      // console.log("Patient: " + JSON.stringify(diagnosis))
       console.log("api resp: " + JSON.stringify(response.data))
     }
     catch (error) {
@@ -87,8 +100,8 @@ export default function PInfo() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.content}>
         <View style={styles.row}>
-        <View style={styles.content}>
             <View style={styles.profileContainer}>
               <Image source={require('./img1.jpg')} style={styles.profileImage} />
               <View style={styles.infoContainer}>
@@ -136,34 +149,15 @@ export default function PInfo() {
                 <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
                   <Text style={styles.buttonText}>Add Diagnosis</Text>
                 </TouchableOpacity>
-                <View style={styles.container}>
-                  <Text style={styles.heading}>List of Past Diagnosis</Text>
-                  <View style={styles.table}>
-                    <View style={styles.tableHeaderRow}>
-                      <Text style={styles.tableHeader}>Aadhaar ID</Text>
-                      <Text style={styles.tableHeader}>First Name</Text>
-                      <Text style={styles.tableHeader}>Last Name</Text>
-                      <Text style={styles.tableHeader}>Remarks</Text>
-                    </View>
-                    {diagnosis.map(diagnosis => (
-                      <TouchableOpacity key={diagnosis.aadhaar} onPress={() => onPressDiagnosisInfo(diagnosis)}>
-                        <View style={styles.tableRow}>
-                          <Text style={styles.tableData}>{diagnosis.aadhaar}</Text>
-                          <Text style={styles.tableData}>{diagnosis.firstName}</Text>
-                          <Text style={styles.tableData}>{diagnosis.lastName}</Text>
-                          <Text style={styles.tableData}>{diagnosis.remark}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-                <TouchableOpacity style={styles.button} onPress={onPressBack}>
+                {/* <TouchableOpacity style={styles.button} onPress={onPressBack}>
                   <Text style={styles.buttonText}>Back</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
-          </View>
-          <></>
+          </View> 
+          <View style={styles.diagnosisContainer}>
+            <PastDiagnosis diagnoses={diagnosis} />
+          </View>     
         </View>
     </View>
   );
@@ -207,7 +201,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    margin: 10,
   },
   infoRow: {
     flexDirection: 'row',
@@ -234,5 +228,11 @@ const styles = StyleSheet.create({
   tableData: {
     flex: 1,
     textAlign: 'center',
+  },
+  diagnosisContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 20,
+    justifyContent: 'flex-start',
   },
 });

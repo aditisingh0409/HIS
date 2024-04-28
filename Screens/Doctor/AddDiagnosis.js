@@ -23,7 +23,7 @@ const AddDiagnosis = () => {
         const userId = await AsyncStorage.getItem('userId');
         const token = await AsyncStorage.getItem('token');
         const role = await AsyncStorage.getItem('role');
-        const locationState = navigation.getParam('state');
+        const locationState = navigation.getState('state');
 
         setAdmitId(locationState.admitId);
         setAadhaar(locationState.aadhaar);

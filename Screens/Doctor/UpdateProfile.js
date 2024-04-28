@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } 
 import { useNavigation } from '@react-navigation/native';
 import backgroundImage from './img1.jpg';
 
-const UpdateProfileScreen = (props) => {
+const UpdateProfile = (props) => {
   const navigation = useNavigation();
 
   const [name, setName] = useState('');

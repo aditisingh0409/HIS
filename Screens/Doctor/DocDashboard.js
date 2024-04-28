@@ -4,28 +4,20 @@ import Profile from './DocProfile';
 import Patients from './Patients';
 import AppNavigation from '../../AppNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios'; // Import axios for making API calls
+import axios from 'axios';
 
-export default function Doctor() {
+export default function DocDashboard() {
   const [isOpen, setIsOpen] = useState(true);
-  const [patients, setPatients] = useState([]); // State variable to hold patients data
-  
-  const userId = AsyncStorage.getItem("userId");
-  const token = AsyncStorage.getItem("token");
-
-  const toggleProfile = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const toggleNavigator = () => {
-    console.log("Bottom")
-    console.log("Navigation")
-  };
+  const [patients, setPatients] = useState([]); 
 
   const [IpCount, setIpCount] = useState(0);
   const [OpCount, setOpCount] = useState(0);
 
   const fetchDoc = async () => {
+
+    const userId = await AsyncStorage.getItem("userId");
+    const token = await AsyncStorage.getItem("token");
+
     try {
       const headers = {
         Authorization: token,
@@ -38,6 +30,7 @@ export default function Doctor() {
         + userId,
         {
           headers: headers,
+
         }
       );
 
@@ -58,6 +51,10 @@ export default function Doctor() {
 
   const fetchPatients = async () => {
     try {
+
+      const userId = await AsyncStorage.getItem("userId");
+      const token = await AsyncStorage.getItem("token");
+
       const headers = {
         Authorization: token,
         "ngrok-skip-browser-warning": "true",
@@ -89,16 +86,6 @@ export default function Doctor() {
   return (
       <View style={styles.container}>
         <View style={styles.content}>
-          {/* Profile Dropdown */}
-          {/* <View style={styles.dropdownMenu}>
-            {isOpen && (
-              <View style={styles.dropdownContent}>
-                <Profile Toggle={toggleProfile} />
-              </View>
-            )}
-          </View>
-           */}
-          {/* < AppNavigation /> */}
           {/* Number of Inpatients and Outpatients */}
           <View style={styles.pieChartsContainer}>
             <View style={styles.circle}>

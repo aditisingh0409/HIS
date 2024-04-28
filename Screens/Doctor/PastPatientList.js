@@ -6,21 +6,22 @@ import AppNavigation from '../../AppNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export default function Doctor() {
+export default function PastPatientList() {
   const [toggle, setToggle] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const [patients, setPatients] = useState([]); // State variable to hold patients data
 
-  const userId = AsyncStorage.getItem("userId");
-  const token = AsyncStorage.getItem("token");
-
+  
   const toggleProfile = () => {
     setIsOpen(!isOpen);
   };
 
   const fetchPatients = async () => {
     try {
+      const userId = await AsyncStorage.getItem("userId");
+      const token = await AsyncStorage.getItem("token");
+
       const headers = {
         Authorization: token,
         "ngrok-skip-browser-warning": "true",
@@ -44,7 +45,7 @@ export default function Doctor() {
   };      
 
   useEffect(() => {
-    fetchPatients(); // Fetch patients data when the component mounts
+    fetchPatients(); 
   }, []);
 
   return (

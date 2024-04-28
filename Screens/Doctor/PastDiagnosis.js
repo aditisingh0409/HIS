@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 const PastDiagnosis = ({ diagnoses }) => {
   const navigation = useNavigation();
 
+  const [counter, setCounter] = useState(1); // Initialize counter state
+
   const onPressDiagnosisInfo = (diagnosis) => {
     console.log("DiagnosisInfo", diagnosis);
-    navigation.navigate("PatientInfo", {admitId:patient.admitId,aadhaar:patient.aadhaar});     
+    navigation.navigate("DiagnosisInfo", {diagnosisId:diagnosis.diagnosisId,admitId:diagnosis.admitId});     
   }  
 
   return (
@@ -15,18 +17,18 @@ const PastDiagnosis = ({ diagnoses }) => {
       <Text style={styles.heading}>List of Diagnoses</Text>
       <View style={styles.table}>
         <View style={styles.tableHeaderRow}>
-          <Text style={styles.tableHeader}>Aadhaar ID</Text>
-          <Text style={styles.tableHeader}>First Name</Text>
-          <Text style={styles.tableHeader}>Last Name</Text>
+          <Text style={styles.tableHeader}>S.No</Text>
+          <Text style={styles.tableHeader}>Medicine</Text>
+          <Text style={styles.tableHeader}>Date</Text>
           <Text style={styles.tableHeader}>Remarks</Text>
         </View>
-        {diagnoses.map(diagnosis => (
-          <TouchableOpacity key={patient.aadhaar} onPress={() => onPressDiagnosisInfo(diagnosis)}>
+        {diagnoses.map((diagnosis, index) => (
+          <TouchableOpacity key={diagnosis.diagnosisId} onPress={() => onPressDiagnosisInfo(diagnosis)}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableData}>{patient.aadhaar}</Text>
-              <Text style={styles.tableData}>{patient.firstName}</Text>
-              <Text style={styles.tableData}>{patient.lastName}</Text>
-              <Text style={styles.tableData}>{patient.remark}</Text>
+              <Text style={styles.tableData}>{counter + index}</Text>
+              <Text style={styles.tableData}>{diagnosis.medicine}</Text>
+              <Text style={styles.tableData}>{diagnosis.date}</Text>
+              <Text style={styles.tableData}>{diagnosis.remarks}</Text>
             </View>
           </TouchableOpacity>
         ))}

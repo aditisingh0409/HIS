@@ -1,64 +1,120 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import AppNavigation from '../../AppNavigation';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import backgroundImage from './img1.jpg'; 
 
-const CalendarScreen = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+export default function CalendarScreen() {
+  const [toggle, setToggle] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [shiftData, setShiftData] = useState(null);
+  const [selectedShiftInfo, setSelectedShiftInfo] = useState('');
 
-  // Get today's date in YYYY-MM-DD format
-  const todayDate = new Date().toISOString().slice(0, 10);
+  useEffect(() => {
+    fetchShiftData();
+  }, []);
+
+  const fetchShiftData = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      
+      const response = await axios.get(
+        `https://present-neat-mako.ngrok-free.app/his/doc/home?userId=${userId}`, 
+        {
+          headers: {
+            Authorization: token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      setShiftData(response.data.shift);
+    } 
+    catch (error) {
+      console.error('Error fetching shift data:', error);
+    }
+  };
+
+  const getShiftDescription = (shiftValue) => {
+    switch (shiftValue) {
+      case 0:
+        return 'Doctor not available';
+      case 1:
+        return 'Available 10 AM - 1 PM';
+      case 2:
+        return 'Available 3 PM - 6 PM';
+      case 3:
+        return 'Available 6 PM - 9 PM';
+      default:
+        return 'No shift data available';
+    }
+  };
+
+  const handleDayClick = (value) => {
+    setSelectedDate(new Date(value.timestamp));
+    const dayOfWeek = new Date(value.timestamp).toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+    const shiftValue = shiftData ? shiftData[dayOfWeek] : null;
+    setSelectedShiftInfo(getShiftDescription(shiftValue));
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.calendarContainer}>
-        <Calendar
-          key={currentMonth.getTime()} // Unique key based on currentMonth
-          current={currentMonth.toISOString().slice(0, 7)}
-          style={styles.calendar}
-          theme={{
-            calendarBackground: '#ffffff',
-            textSectionTitleColor: '#007AFF',
-            dayTextColor: '#333333',
-            todayTextColor: '#ffffff',
-            selectedDayBackgroundColor: '#007AFF',
-            arrowColor: '#007AFF',
-          }}
-          markedDates={{
-            [todayDate]: { selected: true, selectedColor: '#007AFF' }
-          }}
-        />
+    <ImageBackground source={backgroundImage} style={styles.background}>
+      <View style={styles.container}>
+        <View style={styles.calendarContainer}>
+          <Calendar 
+            onDayPress={handleDayClick}
+            markedDates={{ [selectedDate.toISOString().slice(0, 10)]: { selected: true, selectedColor: '#007AFF' } }} 
+          />
+          <View style={styles.shiftInfoContainer}>
+            <Text style={styles.bold}>Shift Details for {selectedDate.toLocaleDateString()}:</Text>
+            <Text> {selectedShiftInfo} </Text>
+          </View>
+        </View>
       </View>
-      <AppNavigation />
-    </SafeAreaView>
+      <View style={styles.navigation}>
+        <AppNavigation />
+      </View>
+    </ImageBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  container: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   calendarContainer: {
-    flex: 1,
     padding: 20,
+    width: '100%',
+    height: '100%',
   },
-  arrowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  shiftInfoContainer: {
+    marginTop: 20,
     alignItems: 'center',
-    marginBottom: 20,
   },
-  monthText: {
-    fontSize: 18,
+  bold: {
     fontWeight: 'bold',
-    color: '#333333',
   },
-  calendar: {
-    borderRadius: 10,
-    overflow: 'hidden',
+  navigation: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0, 
+    flexDirection: 'column',
+    width: '100%',
   },
 });
-
-export default CalendarScreen;

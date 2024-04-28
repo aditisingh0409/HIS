@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { State } from 'react-native-gesture-handler';
 
 const Patients = ({ patients }) => {
   const navigation = useNavigation();
 
   const onPressPatientInfo = (patient) => {
     console.log("PatientInfo", patient);
-    navigation.navigate("PatientInfo", {admitId:patient.admitId,aadhaar:patient.aadhaar});     
+    navigation.navigate("PatientInfo", {State:{admitId:patient.admitId,aadhaar:patient.aadhaar}});     
   }  
 
   return (
