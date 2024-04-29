@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Profile from './DocProfile';
-import Patients from './Patients';
+// import Patients from './Patients';
+import { useNavigation } from '@react-navigation/native';
 import AppNavigation from '../../AppNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -10,6 +11,7 @@ export default function InPatientList() {
   const [toggle, setToggle] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [patients, setPatients] = useState([]); 
+  const navigation = useNavigation();
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
@@ -46,18 +48,44 @@ export default function InPatientList() {
     fetchPatients();
   }, []);
 
+  const onPressLivePatientInfo = (patient) => {
+    console.log("LivePatientInfo", patient);
+    navigation.navigate("LivePatientInfo", {State:{admitId:patient.admitId,aadhaar:patient.aadhaar}});     
+  }
+
   return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <View style={styles.dropdownMenu}>
+          {/* <View style={styles.dropdownMenu}>
             {isOpen && (
               <View style={styles.dropdownContent}>
                 <Profile Toggle={toggleProfile} />
               </View>
             )}
-          </View>
+          </View> */}
           <View style={styles.patientsContainer}>
-            <Patients patients={patients} />
+            {/* <Patients patients={patients} /> */}
+            <Text style={styles.heading}>List of In Patients</Text>
+            <View style={styles.table}>
+              <View style={styles.tableHeaderRow}>
+                <Text style={styles.tableHeader}>Aadhaar ID</Text>
+                <Text style={styles.tableHeader}>First Name</Text>
+                <Text style={styles.tableHeader}>Last Name</Text>
+                <Text style={styles.tableHeader}>Ward No.</Text>
+                <Text style={styles.tableHeader}>Remarks</Text>
+              </View>
+              {patients.map(patient => (
+                <TouchableOpacity key={patient.aadhaar} onPress={() => onPressLivePatientInfo(patient)}>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableData}>{patient.aadhaar}</Text>
+                    <Text style={styles.tableData}>{patient.firstName}</Text>
+                    <Text style={styles.tableData}>{patient.lastName}</Text>
+                    <Text style={styles.tableData}>{patient.wardNo}</Text>
+                    <Text style={styles.tableData}>{patient.remark}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         </View>
         
@@ -107,5 +135,37 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 20,
     justifyContent: 'flex-start',
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  table: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    padding: 5,
+  },
+  tableHeaderRow: {
+    flexDirection: 'row',
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+  },
+  tableHeader: {
+    flex: 1,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
+  },
+  tableData: {
+    flex: 1,
+    textAlign: 'center',
   },
 });

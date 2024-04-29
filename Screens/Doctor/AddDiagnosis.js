@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook from react-navigation
+import { useNavigation, useRoute } from '@react-navigation/native'; // Import navigation hook from react-navigation
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage for local storage
 
 const AddDiagnosis = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const [toggle, setToggle] = useState(true);
+
   const [diagImage, setDiagImage] = useState(null);
-  const [admitId, setAdmitId] = useState('');
-  const [aadhaar, setAadhaar] = useState('');
   const [remarks, setRemarks] = useState('');
   const [discharge, setDischarge] = useState('');
+
   const [medicineName, setMedicineName] = useState('');
   const [count, setCount] = useState(1);
   const [medData, setMedData] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const { State } = route.params;
+  const { admitId, aadhaar } = State;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,10 +27,6 @@ const AddDiagnosis = () => {
         const userId = await AsyncStorage.getItem('userId');
         const token = await AsyncStorage.getItem('token');
         const role = await AsyncStorage.getItem('role');
-        const locationState = navigation.getState('state');
-
-        setAdmitId(locationState.admitId);
-        setAadhaar(locationState.aadhaar);
 
         // if (!userId || !token || !role) {
         //   navigation.navigate('Login'); // Navigate to login if user data is missing
@@ -99,11 +99,11 @@ const AddDiagnosis = () => {
       setRemarks('');
       setDischarge('');
       setMedData({});
-      ToastAndroid.show('Diagnosis added successfully', ToastAndroid.SHORT);
+      // ToastAndroid.show('Diagnosis added successfully', ToastAndroid.SHORT);
       navigation.navigate('Doctor');
     } catch (error) {
       console.error('Error:', error.message);
-      ToastAndroid.show('Error adding diagnosis. Please try again.', ToastAndroid.SHORT);
+      // ToastAndroid.show('Error adding diagnosis. Please try again.', ToastAndroid.SHORT);
     }
   };
 

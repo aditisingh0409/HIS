@@ -6,7 +6,8 @@ import DocDashboard from "./Screens/Doctor/DocDashboard"
 import AddDiagnosis from "./Screens/Doctor/AddDiagnosis";
 import InPatientList from "./Screens/Doctor/InPatientList";
 import PastPatientList from "./Screens/Doctor/PastPatientList";
-import PatientInfo from "./Screens/Doctor/PatientInfo";
+import LivePatientInfo from "./Screens/Doctor/LivePatientInfo";
+import PastPatientInfo from "./Screens/Doctor/PastPatientInfo";
 import DoctorInfo from "./Screens/Doctor/DoctorInfo";
 import CalendarScreen from "./Screens/Doctor/CalendarScreen";
 import SettingsScreen from "./Screens/Doctor/SettingsScreen";
@@ -41,7 +42,8 @@ const App = () => {
         <Stack.Screen name="AddDiagnosis" component={AddDiagnosis} />
         <Stack.Screen name="InPatientList" component={InPatientList} /> 
         <Stack.Screen name="PastPatientList" component={PastPatientList} />
-        <Stack.Screen name="PatientInfo" component={PatientInfo} />
+        <Stack.Screen name="LivePatientInfo" component={LivePatientInfo} />
+        <Stack.Screen name="PastPatientInfo" component={PastPatientInfo} />
         <Stack.Screen name="DoctorInfo" component={DoctorInfo} />
         <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />

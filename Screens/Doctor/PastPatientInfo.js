@@ -2,23 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PastDiagnosis from './PastDiagnosis';
+// import PastDiagnosis from './PastDiagnosis';
 import axios from 'axios';
 
-export default function PatientInfo() {
+export default function PastPatientInfo() {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const [counter, setCounter] = useState(1);
   
   const [patient, setPatient] = useState([]);
-  const [diagnosis, setDiagnosis] = useState([]);
+  const [diagnoses, setDiagnosis] = useState([]);
   const { State } = route.params; // Destructure State from route.params
 
   // Now you can access admitId and aadhaar from State object
-  const { admitId, aadhaar } = State;
+  const { patientId } = State;
   
   useEffect(()=>
     {
-      fetchUsers();
+      fetchPastPatient();
     },[]
   );
 
@@ -40,11 +42,17 @@ export default function PatientInfo() {
     navigation.navigate("DocDashboard");
   }
 
-  const fetchUsers = async() =>{
+  const onPressDiagnosisInfo = (diagnosis) => {
+    console.log("DiagnosisInfo", diagnosis);
+    navigation.navigate("DiagnosisInfo", {State:{admitId:diagnosis.admitId}});     
+  }
+
+  const fetchPastPatient = async() =>{
     try{
       const userId = await AsyncStorage.getItem('userId');
       const token = await AsyncStorage.getItem('token');
       const role = await AsyncStorage.getItem('role');
+    //   const patientId = await AsyncStorage.getItem('patientId');
       // const admitId = await AsyncStorage.getItem('admitId');
 
       const headers = {
@@ -53,14 +61,14 @@ export default function PatientInfo() {
       }
       
       const response = await axios.get(
-        `https://present-neat-mako.ngrok-free.app/his/patient/viewOneLivePatient?admitId=${admitId}&userId=${userId}&role=${role}`,
+        `https://present-neat-mako.ngrok-free.app/his/patient/pastHistoryOnePatient?role=${role}&userId=${userId}&patientId=${patientId}`,
         {
           headers: headers
         }
       );
       
       setPatient(response.data.detail); 
-      fetchDiagnosis();
+      fetchPastDiagnosis();
       console.log("Patient: " + JSON.stringify(patient))
       console.log("api resp: " + JSON.stringify(response.data))
     }
@@ -69,12 +77,11 @@ export default function PatientInfo() {
     } 
   };
 
-  const fetchDiagnosis = async() =>{
+  const fetchPastDiagnosis = async() =>{
     try{
       const userId = await AsyncStorage.getItem('userId');
       const token = await AsyncStorage.getItem('token');
       const role = await AsyncStorage.getItem('role');
-      const admitId = await AsyncStorage.getItem('admitId');
       
       const headers = {
         'Authorization': token,
@@ -82,7 +89,7 @@ export default function PatientInfo() {
       }
       
       const response = await axios.get(
-        `https://present-neat-mako.ngrok-free.app/his/patient/viewOneLivePatient?admitId=${admitId}&userId=${userId}&role=${role}`,
+        `https://present-neat-mako.ngrok-free.app/his/patient/pastHistoryOnePatient?role=${role}&userId=${userId}&patientId=${patientId}`,
         {
           headers: headers
         }
@@ -130,10 +137,10 @@ export default function PatientInfo() {
                   <Text style={styles.label}>Gender:</Text>
                   <Text style={styles.label}>{patient.gender}</Text>
                 </View>
-                <View style={styles.infoRow}>
+                {/* <View style={styles.infoRow}>
                   <Text style={styles.label}>Patient Type:</Text>
                   <Text style={styles.tableData}>{patient.patientType}</Text>
-                </View>
+                </View> */}
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Date of Birth:</Text>
                   <Text style={styles.tableData}>{patient.birthDate}</Text>
@@ -146,9 +153,9 @@ export default function PatientInfo() {
                   <Text style={styles.label}>Address:</Text>
                   <Text style={styles.label}>{patient.address}</Text>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
+                {/* <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
                   <Text style={styles.buttonText}>Add Diagnosis</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* <TouchableOpacity style={styles.button} onPress={onPressBack}>
                   <Text style={styles.buttonText}>Back</Text>
                 </TouchableOpacity> */}
@@ -156,7 +163,26 @@ export default function PatientInfo() {
             </View>
           </View> 
           <View style={styles.diagnosisContainer}>
-            <PastDiagnosis diagnoses={diagnosis} />
+            {/* <PastDiagnosis diagnoses={diagnosis} /> */}
+            <Text style={styles.tableHeading}>List of Previous Diagnoses</Text>
+            <View style={styles.table}>
+              <View style={styles.tableHeaderRow}>
+                <Text style={styles.tableHeader}>Serial No.</Text>
+                <Text style={styles.tableHeader}>Patient ID</Text>
+                <Text style={styles.tableHeader}>Date and Time</Text>
+                <Text style={styles.tableHeader}>Remarks</Text>
+              </View>
+              {diagnoses.map((diagnosis, index) => (
+                <TouchableOpacity key={diagnosis.admitId} onPress={() => onPressDiagnosisInfo(diagnosis)}>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableData}>{counter + index}</Text>
+                    <Text style={styles.tableData}>{diagnosis.patientId}</Text>
+                    <Text style={styles.tableData}>{diagnosis.date}</Text>
+                    <Text style={styles.tableData}>{diagnosis.remarks}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>     
         </View>
     </View>
@@ -234,5 +260,37 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 20,
     justifyContent: 'flex-start',
+  },
+  tableHeading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  table: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    padding: 5,
+  },
+  tableHeaderRow: {
+    flexDirection: 'row',
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+  },
+  tableHeader: {
+    flex: 1,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
+  },
+  tableData: {
+    flex: 1,
+    textAlign: 'center',
   },
 });

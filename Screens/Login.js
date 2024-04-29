@@ -31,7 +31,6 @@ const Login = () => {
               AsyncStorage.setItem('role',response.data.role);
               AsyncStorage.setItem('token','Bearer ' + response.data.token);
               navigation.navigate("DocDashboard");
-              // alert('Login Successful');
               console.log("DocDashboard");
             }
             catch(error) {
@@ -147,4 +146,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Login;
