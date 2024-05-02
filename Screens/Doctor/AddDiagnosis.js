@@ -1,75 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { useNavigation, useRoute } from '@react-navigation/native'; // Import navigation hook from react-navigation
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage for local storage
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleSheet } from 'react-native';
 
 const AddDiagnosis = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const [toggle, setToggle] = useState(true);
-
-  const [diagImage, setDiagImage] = useState(null);
   const [remarks, setRemarks] = useState('');
-  const [discharge, setDischarge] = useState('');
-
   const [medicineName, setMedicineName] = useState('');
-  const [count, setCount] = useState(1);
-  const [medData, setMedData] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [count, setCount] = useState('');
+  const [medicines, setMedicines] = useState([]);
+  const navigation = useNavigation();
 
-  const { State } = route.params;
-  const { admitId, aadhaar } = State;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
-        const role = await AsyncStorage.getItem('role');
-
-        // if (!userId || !token || !role) {
-        //   navigation.navigate('Login'); // Navigate to login if user data is missing
-        // } else {
-        //   setIsLoggedIn(true); // Set isLoggedIn to true
-        // }
-      } catch (error) {
-        console.error('Error:', error.message);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleAdd = () => {
-    if (medicineName && count > 0) {
-      setMedData(prevData => ({
-        ...prevData,
-        [medicineName]: count
-      }));
+  const handleAddMedicine = () => {
+    if (medicineName && count) {
+      setMedicines([...medicines, { name: medicineName, count: count }]);
       setMedicineName('');
-      setCount(1);
+      setCount('');
     }
-  };
-
-  const handleRemove = key => {
-    if (medData[key] > 1) {
-      setMedData(prevData => ({
-        ...prevData,
-        [key]: prevData[key] - 1
-      }));
-    } else {
-      const updatedData = { ...medData };
-      delete updatedData[key];
-      setMedData(updatedData);
-    }
-  };
-
-  const handleIncreaseCount = key => {
-    setMedData(prevData => ({
-      ...prevData,
-      [key]: prevData[key] + 1
-    }));
   };
 
   const handleSubmit = async () => {
@@ -80,8 +27,8 @@ const AddDiagnosis = () => {
 
       const formData = new FormData();
       formData.append('remarks', remarks);
-      formData.append('discharge', discharge);
-      formData.append('medicine', JSON.stringify(medData));
+      // formData.append('discharge', discharge);
+      formData.append('medicine', JSON.stringify(medicineName));
 
       const response = await axios.post(
         `https://present-neat-mako.ngrok-free.app/his/patient/addDiagnosis?role=${role}&userId=${userId}`,
@@ -100,54 +47,110 @@ const AddDiagnosis = () => {
       setDischarge('');
       setMedData({});
       // ToastAndroid.show('Diagnosis added successfully', ToastAndroid.SHORT);
-      navigation.navigate('Doctor');
+      navigation.navigate('DocDashboard');
     } catch (error) {
       console.error('Error:', error.message);
       // ToastAndroid.show('Error adding diagnosis. Please try again.', ToastAndroid.SHORT);
     }
   };
+  // const handleSubmit = () => {
+  //   // Handle form submission logic here
+  //   console.log('Remarks:', remarks);
+  //   console.log('Medicines:', medicines);
+  // };
 
-  if (!isLoggedIn) {
-    return null; // Render nothing until user is logged in
-  }
+  const handleIncreaseCount = (index) => {
+    const updatedMedicines = [...medicines];
+    updatedMedicines[index].count = Number(updatedMedicines[index].count) + 1;
+    setMedicines(updatedMedicines);
+  };
+
+  const handleDecreaseCount = (index) => {
+    const updatedMedicines = [...medicines];
+    if (updatedMedicines[index].count > 1) {
+      updatedMedicines[index].count -= 1;
+      setMedicines(updatedMedicines);
+    } 
+    else {
+      // Remove medicine if count reaches 0
+      updatedMedicines.splice(index, 1);
+      setMedicines(updatedMedicines);
+    }
+  };
+
+  const handleRemoveMedicine = (index) => {
+    const updatedMedicines = [...medicines];
+    updatedMedicines.splice(index, 1);
+    setMedicines(updatedMedicines);
+  };
+
+  const renderMedicine = ({ item, index }) => (
+    <View style={styles.medicineItem}>
+      <Text style={styles.medicineName}>{item.name}</Text>
+      <View style={styles.countContainer}>
+        <TouchableOpacity style={styles.countButton} onPress={() => handleDecreaseCount(index)}>
+          <Text style={styles.countButtonText}>-</Text>
+        </TouchableOpacity>
+        <Text style={styles.countText}>{item.count}</Text>
+        <TouchableOpacity style={styles.countButton} onPress={() => handleIncreaseCount(index)}>
+          <Text style={styles.countButtonText}>+</Text>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveMedicine(index)}>
+        <Text style={styles.removeButtonText}>Remove</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.title}>Add New Diagnosis</Text>
-        <View style={styles.inputContainer}>
-          <Text>Remarks</Text>
-          <TextInput
-            style={styles.input}
-            value={remarks}
-            onChangeText={text => setRemarks(text)}
-            multiline
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text>Medicine Name</Text>
-          <TextInput
-            style={styles.input}
-            value={medicineName}
-            onChangeText={text => setMedicineName(text)}
-          />
-          <Text>Count</Text>
-          <TextInput
-            style={styles.input}
-            value={count.toString()}
-            onChangeText={text => setCount(parseInt(text))}
-            keyboardType="numeric"
-          />
-          <Button title="Add" onPress={handleAdd} />
-        </View>
-        <View style={styles.medicineList}>
-          <Text style={styles.medicineListTitle}>Added Medicines:</Text>
-          {Object.entries(medData).map(([key, value]) => (
-            <Text key={key}>{`${key}: ${value}`}</Text>
-          ))}
-        </View>
-        <Button title="Submit" onPress={handleSubmit} />
+    <ScrollView style={styles.container}>
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Remarks:</Text>
+        <TextInput
+          style={styles.input}
+          multiline
+          value={remarks}
+          onChangeText={setRemarks}
+        />
       </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Medicine Name:</Text>
+        <TextInput
+          style={styles.input}
+          value={medicineName}
+          onChangeText={setMedicineName}
+        />
+      </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Count:</Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          value={count}
+          onChangeText={setCount}
+        />
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleAddMedicine}>
+        <Text style={styles.buttonText}>Add Medicine</Text>
+      </TouchableOpacity>
+
+      {medicines.length > 0 && (
+        <View style={styles.medicinesList}>
+          <Text style={styles.medicinesListTitle}>Added Medicines:</Text>
+          <FlatList
+            data={medicines}
+            renderItem={renderMedicine}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      )}
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -155,144 +158,83 @@ const AddDiagnosis = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#ECE3F0',
+    padding: 16,
+    backgroundColor: '#FFFFFF',
   },
-  title: {
-    fontSize: 20,
-    marginBottom: 10,
+  formGroup: {
+    marginBottom: 16,
   },
-  inputContainer: {
-    marginBottom: 20,
+  label: {
+    fontWeight: 'bold',
+    marginBottom: 4,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    padding: 8,
   },
-  medicineList: {
-    marginBottom: 20,
+  button: {
+    backgroundColor: '#4F2197',
+    width: '50%',
+    padding: 10,
+    alignSelf: 'center',
+    borderRadius: 10,
+    marginLeft: 20,
+    marginTop: 10,
   },
-  medicineListTitle: {
-    fontSize: 16,
-    marginBottom: 10,
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  medicinesList: {
+    marginTop: 16,
+  },
+  medicinesListTitle: {
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  medicineItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  medicineName: {
+    flex: 1,
+    marginRight: 8,
+  },
+  countContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  countButton: {
+    backgroundColor: '#4F2197',
+    padding: 8,
+    borderRadius: 4,
+    marginBottom: 8,
+    marginHorizontal: 10,
+  },
+  countButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  countText: {
+    marginHorizontal: 8,
+  },
+  removeButton: {
+    backgroundColor: '#f44336',
+    // width: '10%',
+    padding: 8,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  removeButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
 export default AddDiagnosis;
-
-// import React, { useState } from 'react';
-// import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-
-// export default function AddDiagnosis() {
-//   const [toggle, setToggle] = useState(false);
-
-//   const Toggle = () => {
-//     setToggle(!toggle);
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.row}>
-//         <View style={styles.content}>
-//           <Text style={styles.heading}>Add Diagnosis</Text>
-//           <View style={styles.inputContainer}>
-//             <View style={styles.inputRow}>
-//               <View style={styles.inputField}>
-//                 <Text>Medicine Name</Text>
-//                 <TextInput style={styles.input} />
-//               </View>
-//               <View style={styles.inputField}>
-//                 <Text>Days</Text>
-//                 <TextInput style={styles.input} />
-//               </View>
-//               <View style={styles.inputField}>
-//                 <Text>Add/Remove</Text>
-//                 <TextInput style={styles.input} />
-//               </View>
-//             </View>
-//             <View style={styles.inputRow}>
-//               <View style={styles.inputField}>
-//                 <Text>Remarks</Text>
-//                 <TextInput style={styles.input} />
-//               </View>
-//               <View style={styles.inputField}>
-//                 <Text>Add/Remove</Text>
-//                 <TextInput style={styles.input} />
-//               </View>
-//             </View>
-//             <View style={styles.buttonContainer}>
-//               <TouchableOpacity style={styles.button}>
-//                 <Text>Submit</Text>
-//               </TouchableOpacity>
-//               <TouchableOpacity style={styles.button}>
-//                 <Text>Cancel</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     width: '100%',
-//   },
-//   row: {
-//     flexDirection: 'row',
-//     width: '100%',
-//   },
-//   sidebarContainer: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//   },
-//   content: {
-//     flex: 3,
-//     backgroundColor: '#FFFFFF',
-//     padding: 20,
-//   },
-//   heading: {
-//     fontSize: 24,
-//     textAlign: 'center',
-//     marginBottom: 20,
-//   },
-//   inputContainer: {
-//     flex: 1,
-//   },
-//   inputRow: {
-//     flexDirection: 'row',
-//     marginBottom: 20,
-//   },
-//   inputField: {
-//     flex: 1,
-//     marginRight: 10,
-//   },
-//   input: {
-//     borderWidth: 1,
-//     borderColor: '#000000',
-//     borderRadius: 5,
-//     padding: 5,
-//     height: 40,
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     marginTop: 20,
-//   },
-//   button: {
-//     backgroundColor: '#DDDDDD',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     borderRadius: 5,
-//     marginHorizontal: 10,
-//   },  
-//   buttonText: {
-//     color: '#000000',
-//     fontSize: 16,
-//   },
-// });

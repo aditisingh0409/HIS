@@ -15,7 +15,7 @@ const NavigationBar = () => {
       <MaterialCommunityIcons name="account-group-outline" size={26} color="black" onPress={() => navigation.navigate("InPatientList")}/>
       <MaterialCommunityIcons name="history" size={24} color="black" onPress={() => navigation.navigate("PastPatientList")}/>
       <MaterialCommunityIcons name="calendar-outline" size={26} color="black" onPress={() => navigation.navigate("CalendarScreen")}/>
-      <MaterialCommunityIcons name="cog-outline" size={26} color="black" onPress={() => navigation.navigate("SettingsScreen")}/>
+      <MaterialCommunityIcons name="cog-outline" size={26} color="black" onPress={() => navigation.navigate("DocProfile")}/>
     </View>
   )
 }

@@ -8,7 +8,6 @@ import InPatientList from "./Screens/Doctor/InPatientList";
 import PastPatientList from "./Screens/Doctor/PastPatientList";
 import LivePatientInfo from "./Screens/Doctor/LivePatientInfo";
 import PastPatientInfo from "./Screens/Doctor/PastPatientInfo";
-import DoctorInfo from "./Screens/Doctor/DoctorInfo";
 import CalendarScreen from "./Screens/Doctor/CalendarScreen";
 import SettingsScreen from "./Screens/Doctor/SettingsScreen";
 import UpdateProfile from "./Screens/Doctor/UpdateProfile";
@@ -44,7 +43,6 @@ const App = () => {
         <Stack.Screen name="PastPatientList" component={PastPatientList} />
         <Stack.Screen name="LivePatientInfo" component={LivePatientInfo} />
         <Stack.Screen name="PastPatientInfo" component={PastPatientInfo} />
-        <Stack.Screen name="DoctorInfo" component={DoctorInfo} />
         <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
         <Stack.Screen name="DocProfile" component={DocProfile} />
