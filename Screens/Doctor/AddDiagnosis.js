@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { useNavigation, useRoute } from '@react-navigation/native'; // Import navigation hook from react-navigation
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage for local storage
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleSheet } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native'; 
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleSheet, Image, Platform } from 'react-native';
+import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 const AddDiagnosis = () => {
   const [remarks, setRemarks] = useState('');
@@ -10,6 +13,15 @@ const AddDiagnosis = () => {
   const [count, setCount] = useState('');
   const [medicines, setMedicines] = useState([]);
   const navigation = useNavigation();
+
+  const route = useRoute();
+  const { State } = route.params;
+  const { admitId, aadhaar } = State;
+
+  const [formData, setFormData] = useState({
+    remarks: "",
+    discharge: "",
+  });
 
   const handleAddMedicine = () => {
     if (medicineName && count) {
@@ -84,6 +96,67 @@ const AddDiagnosis = () => {
     setMedicines(updatedMedicines);
   };
 
+    // const [form, setForm] = useState({
+  //   title: "",
+  //   video: null,
+  //   thumbnail: null,
+  //   prompt: "",
+  // });
+
+  // const handleSubmit = () => {
+  //   // Perform submission logic here, using the form values
+  //   console.log({
+  //     admitId,
+  //     remarks,
+  //     bloodPressure,
+  //     oxygenLevel,
+  //     reportFile,
+  //     isDischarged,
+  //     medicineList,
+  //   });
+  // };
+
+  const openPicker = async (selectType) => {
+    let acceptedTypes;
+    let alertMessage;
+  
+    if (selectType === "image") {
+      acceptedTypes = ["image/png", "image/jpeg"];
+      alertMessage = "Please select an image (PNG or JPEG) file.";
+    } else if (selectType === "doc") {
+      acceptedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+      alertMessage = "Please select a document (PDF or DOC) file.";
+    } else {
+      // Unsupported type
+      Alert.alert("Unsupported File Type", "Only images (PNG, JPEG) and documents (PDF, DOC) are supported.");
+      return;
+    }
+  
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: acceptedTypes,
+      });
+  
+      if (result.type === "cancel") {
+        // User canceled
+        return;
+      }
+  
+      if (!acceptedTypes.includes(result.type)) {
+        // File type not supported
+        Alert.alert("Unsupported File Type", alertMessage);
+        return;
+      }
+  
+      // Handle the selected file
+      console.log("Selected file:", result);
+    } catch (error) {
+      // Handle any errors
+      console.error("Error selecting document:", error);
+      Alert.alert("Error", "An error occurred while selecting the document. Please try again.");
+    }
+  };  
+
   const renderMedicine = ({ item, index }) => (
     <View style={styles.medicineItem}>
       <Text style={styles.medicineName}>{item.name}</Text>
@@ -102,8 +175,25 @@ const AddDiagnosis = () => {
     </View>
   );
 
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const libraryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (libraryStatus.status !== 'granted') {
+          Alert.alert('Sorry, we need camera roll permissions to make this work!');
+        }
+
+        const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+        if (cameraStatus.status !== 'granted') {
+          Alert.alert('Sorry, we need camera permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+  
   return (
     <ScrollView style={styles.container}>
+      <Text style={styles.heading}>Add Diagnosis</Text>
       <View style={styles.formGroup}>
         <Text style={styles.label}>Remarks:</Text>
         <TextInput
@@ -148,6 +238,19 @@ const AddDiagnosis = () => {
         </View>
       )}
 
+    <View style={styles.uploadContainer}>
+      <TouchableOpacity onPress={() => openPicker("image")}>
+          <View style={styles.uploadOption}>
+            <Text>Upload Image</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openPicker("doc")}>
+          <View style={styles.uploadOption}>
+            <Text>Upload Document</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
@@ -163,6 +266,11 @@ const styles = StyleSheet.create({
   },
   formGroup: {
     marginBottom: 16,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   label: {
     fontWeight: 'bold',
@@ -234,6 +342,21 @@ const styles = StyleSheet.create({
   removeButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  uploadContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  uploadOption: {
+    margin: 10,
+    padding: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

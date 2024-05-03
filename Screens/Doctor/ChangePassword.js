@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import backgroundImage from './img1.jpg';
 
-const ChangePassword = (props) => {
+const ChangePassword = () => {
   const navigation = useNavigation();
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -14,21 +15,29 @@ const ChangePassword = (props) => {
   const changePassword = async (e) => {
     e.preventDefault();
 
+    const userId = await AsyncStorage.getItem("userId");
+    const role = await AsyncStorage.getItem("role");
+    const token = await AsyncStorage.getItem("token");
+
     if (validate()) {
       try {
         const response = await axios.post('https://present-neat-mako.ngrok-free.app/his/changePassword', {
-          userId: "saloni-admin",
+          userId: userId,
           oldPassword: currentPassword,
-          "newPassword": newPassword,
+          newPassword: newPassword,
           role: role
         }, {
-          headers: {
-            "userId": "saloni-admin",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWxvbmkiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTcxMjg0MDUwNywiZXhwIjoxNzEyOTI2OTA3fQ.LmX-nrj1Udzhh-fx62mXZoiY-qRvfMc8oufzlHokiCM"
+          headers : {
+            'ngrok-skip-browser-warning': 'true',
+            "Authorization":token
           }
+          
         });
         console.log("API response: " + JSON.stringify(response.data));
-      } catch (err) {
+        alert('Password Updated');
+        navigation.replace("Login");
+      } 
+      catch (err) {
         console.error(`Error! ${JSON.stringify(err.response)}`);
       }
     }
@@ -53,8 +62,8 @@ const ChangePassword = (props) => {
   };
 
   const onPressCancel = () => {
-    console.log("SettingsScreen");
-    navigation.navigate("SettingsScreen");
+    console.log("DocProfile");
+    navigation.navigate("DocProfile");
   }
 
   return (

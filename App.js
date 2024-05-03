@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login"
+      <Stack.Navigator initialRouteName="DocDashboard"
       screenOptions={({ route }) => ({
         // headerRight: () => (
         //   <View>
@@ -48,7 +48,6 @@ const App = () => {
         <Stack.Screen name="DocProfile" component={DocProfile} />
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        
       </Stack.Navigator>
     </NavigationContainer>
   );

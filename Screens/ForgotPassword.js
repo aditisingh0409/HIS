@@ -24,9 +24,11 @@ const ForgotPassword = () => {
         }
     });
       console.log("API response: "+JSON.stringify(response.data));
+      alert('Email Sent');
       navigation.navigate("Login");
     }
     catch(err){
+      alert('Please Enter a Valid Email');
       console.error(`Error! ${JSON.stringify(err.response)}`);
     }
   };

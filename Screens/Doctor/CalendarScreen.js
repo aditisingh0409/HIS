@@ -7,7 +7,6 @@ import AppNavigation from '../../AppNavigation';
 import backgroundImage from './img1.jpg'; 
 
 export default function CalendarScreen() {
-  const [toggle, setToggle] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [shiftData, setShiftData] = useState(null);
   const [selectedShiftInfo, setSelectedShiftInfo] = useState('');

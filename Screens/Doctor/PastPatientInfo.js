@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import PastDiagnosis from './PastDiagnosis';
 import axios from 'axios';
 
 export default function PastPatientInfo() {
@@ -17,30 +16,13 @@ export default function PastPatientInfo() {
 
   // Now you can access admitId and aadhaar from State object
   const { patientId } = State;
+
+  const [modalVisible, setModalVisible] = useState(false);
   
-  useEffect(()=>
-    {
+  useEffect(()=>{
       fetchPastPatient();
     },[]
   );
-
-  // const { admitId, aadhaar } = route.params;
-  // useEffect(() => {
-  //   if (route.params) {
-  //     const { admitId, aadhaar } = route.params;
-  //     fetchUsers(admitId);
-  //   }
-  // }, [route.params]);
-
-  const onPressAddDiagnosis = () => {
-    console.log("AddDiagnosis");
-    navigation.navigate("AddDiagnosis");
-  }
-
-  const onPressBack = () => {
-    console.log("DocDashboard");
-    navigation.navigate("DocDashboard");
-  }
 
   const onPressDiagnosisInfo = (diagnosis) => {
     console.log("DiagnosisInfo", diagnosis);
@@ -52,8 +34,6 @@ export default function PastPatientInfo() {
       const userId = await AsyncStorage.getItem('userId');
       const token = await AsyncStorage.getItem('token');
       const role = await AsyncStorage.getItem('role');
-    //   const patientId = await AsyncStorage.getItem('patientId');
-      // const admitId = await AsyncStorage.getItem('admitId');
 
       const headers = {
         'Authorization': token,
@@ -68,7 +48,7 @@ export default function PastPatientInfo() {
       );
       
       setPatient(response.data.detail); 
-      fetchPastDiagnosis();
+      setDiagnosis(response.data.list);
       console.log("Patient: " + JSON.stringify(patient))
       console.log("api resp: " + JSON.stringify(response.data))
     }
@@ -77,33 +57,15 @@ export default function PastPatientInfo() {
     } 
   };
 
-  const fetchPastDiagnosis = async() =>{
-    try{
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
-      const role = await AsyncStorage.getItem('role');
-      
-      const headers = {
-        'Authorization': token,
-        'ngrok-skip-browser-warning': "true",
-      }
-      
-      const response = await axios.get(
-        `https://present-neat-mako.ngrok-free.app/his/patient/pastHistoryOnePatient?role=${role}&userId=${userId}&patientId=${patientId}`,
-        {
-          headers: headers
-        }
-      );
-      
-      setDiagnosis(response.data.list); 
-      // console.log("Patient: " + JSON.stringify(diagnosis))
-      console.log("api resp: " + JSON.stringify(response.data))
-    }
-    catch (error) {
-      console.log("Error", error);
-    } 
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
   };
 
+  const renderDiagnosisItem = ({ item }) => (
+    <View style={styles.diagnosisItem}>
+      <Text style={styles.diagnosisText}>{item.date}: {item.remarks}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -137,10 +99,6 @@ export default function PastPatientInfo() {
                   <Text style={styles.label}>Gender:</Text>
                   <Text style={styles.label}>{patient.gender}</Text>
                 </View>
-                {/* <View style={styles.infoRow}>
-                  <Text style={styles.label}>Patient Type:</Text>
-                  <Text style={styles.tableData}>{patient.patientType}</Text>
-                </View> */}
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Date of Birth:</Text>
                   <Text style={styles.tableData}>{patient.birthDate}</Text>
@@ -153,18 +111,11 @@ export default function PastPatientInfo() {
                   <Text style={styles.label}>Address:</Text>
                   <Text style={styles.label}>{patient.address}</Text>
                 </View>
-                {/* <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
-                  <Text style={styles.buttonText}>Add Diagnosis</Text>
-                </TouchableOpacity> */}
-                {/* <TouchableOpacity style={styles.button} onPress={onPressBack}>
-                  <Text style={styles.buttonText}>Back</Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </View> 
           <View style={styles.diagnosisContainer}>
-            {/* <PastDiagnosis diagnoses={diagnosis} /> */}
-            <Text style={styles.tableHeading}>List of Previous Diagnoses</Text>
+            <Text style={styles.tableHeading}>List of Previous Visits</Text>
             <View style={styles.table}>
               <View style={styles.tableHeaderRow}>
                 <Text style={styles.tableHeader}>Serial No.</Text>
@@ -173,7 +124,7 @@ export default function PastPatientInfo() {
                 <Text style={styles.tableHeader}>Remarks</Text>
               </View>
               {diagnoses.map((diagnosis, index) => (
-                <TouchableOpacity key={diagnosis.admitId} onPress={() => onPressDiagnosisInfo(diagnosis)}>
+                <TouchableOpacity key={diagnosis.admitId} onPress={() => toggleModal(diagnosis)}>
                   <View style={styles.tableRow}>
                     <Text style={styles.tableData}>{counter + index}</Text>
                     <Text style={styles.tableData}>{diagnosis.patientId}</Text>
@@ -185,6 +136,27 @@ export default function PastPatientInfo() {
             </View>
           </View>     
         </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={toggleModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Diagnoses</Text>
+              <FlatList
+                data={diagnoses}
+                renderItem={renderDiagnosisItem}
+                keyExtractor={(item) => item.diagnosisId}
+              />
+              <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
     </View>
   );
 }
@@ -292,5 +264,48 @@ const styles = StyleSheet.create({
   tableData: {
     flex: 1,
     textAlign: 'center',
+  },
+  viewDiagnosisButton: {
+    backgroundColor: '#4F2197',
+    padding: 10,
+    borderRadius: 5,
+  },
+  viewDiagnosisText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  diagnosisItem: {
+    marginBottom: 10,
+  },
+  diagnosisText: {
+    fontSize: 16,
+  },
+  closeButton: {
+    backgroundColor: '#4F2197',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    alignSelf: 'flex-end',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

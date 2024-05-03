@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Profile from './DocProfile';
-// import Patients from './Patients';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AppNavigation from '../../AppNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
 
 export default function PastPatientList() {
-  const [toggle, setToggle] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [patients, setPatients] = useState([]); // State variable to hold patients data
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const navigation = useNavigation();
-
-  
-  const toggleProfile = () => {
-    setIsOpen(!isOpen);
-  };
 
   const fetchPatients = async () => {
     try {
@@ -40,11 +35,13 @@ export default function PastPatientList() {
     console.log("API response of patient list : "+JSON.stringify(response.data))
     
     setPatients(response.data.response);
-    } catch (error) {
+    setFilteredPatients(response.data.response); // Set the filtered patients with the initial data
+    } 
+    catch (error) {
       console.log('Error fetching patients:', error);
     }
-  };      
-
+  }; 
+  
   useEffect(() => {
     fetchPatients(); 
   }, []);
@@ -54,22 +51,58 @@ export default function PastPatientList() {
     navigation.navigate("PastPatientInfo", {State:{patientId:patient.aadhaar}});     
   }
 
+  const handleSearch = (text) => {
+    setSearchText(text);
+  };
+
+  const performSearch = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      const token = await AsyncStorage.getItem("token");
+
+      const headers = {
+        Authorization: token,
+        "ngrok-skip-browser-warning": "true",
+      };
+      console.log("User Id : ", userId);
+
+      // Make the API call to fetch patients data
+      const response = await axios.get(
+        `https://present-neat-mako.ngrok-free.app/his/patient/pastHistory?role=DOCTOR&userId=${userId}&patientId=${searchText}`,
+      {
+        headers: headers,  
+      }
+    );
+    console.log("API response of patient list : "+JSON.stringify(response.data))
+    
+    setPatients(response.data.response);
+    setFilteredPatients(response.data.response); // Set the filtered patients with the initial data
+    } 
+    catch (error) {
+      console.log('Error fetching patients:', error);
+    }
+  };
+
   return (
       <View style={styles.container}>
         <View style={styles.content}>
-          {/* <View style={styles.dropdownMenu}>
-            {isOpen && (
-              <View style={styles.dropdownContent}>
-                <Profile Toggle={toggleProfile} />
-              </View>
-            )}
-          </View> */}
-          <View style={styles.patientsContainer}>
-            {/* <Patients patients={patients} /> */}
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search by Patient ID"
+              value={searchText}
+              onChangeText={handleSearch}
+              placeholderTextColor="#888"
+            />
+            <TouchableOpacity onPress={performSearch}>
+              <Ionicons name="search" size={24} color="#888" style={styles.searchIcon} />
+            </TouchableOpacity>
+        </View>
+        <View style={styles.patientsContainer}>
             <Text style={styles.heading}>List of Previous Patients</Text>
             <View style={styles.table}>
               <View style={styles.tableHeaderRow}>
-                <Text style={styles.tableHeader}>Aadhaar ID</Text>
+                <Text style={styles.tableHeader}>Patient ID</Text>
                 <Text style={styles.tableHeader}>First Name</Text>
                 <Text style={styles.tableHeader}>Last Name</Text>
                 <Text style={styles.tableHeader}>Remarks</Text>
@@ -114,19 +147,21 @@ const styles = StyleSheet.create({
     borderLeftColor: '#CCCCCC',
     overflow: 'hidden',
   },
-  dropdownMenu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 200,
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255)',
-    zIndex: 9999,
-    justifyContent: 'center',
-    alignItems: 'center',
+  searchContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    width: '30%',
   },
-  dropdownContent: {
-    width: '100%',
+  searchInput: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+  },
+  searchIcon: {
+    marginVertical: 6,
+    marginHorizontal: 6,
   },
   patientsContainer: {
     flex: 1,

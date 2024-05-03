@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PastDiagnosis from './PastDiagnosis';
 import axios from 'axios';
 
 export default function LivePatientInfo() {
@@ -15,22 +14,18 @@ export default function LivePatientInfo() {
   const [diagnoses, setDiagnosis] = useState([]);
   const { State } = route.params; // Destructure State from route.params
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedDiagnosis, setSelectedDiagnosis] = useState(null); 
+  
   // Now you can access admitId and aadhaar from State object
   const { admitId, aadhaar } = State;
+
+  const [modalVisible, setModalVisible] = useState(false);
   
-  useEffect(()=>
-    {
+  useEffect(()=>{
       fetchLivePatient();
     },[]
   );
-
-  // const { admitId, aadhaar } = route.params;
-  // useEffect(() => {
-  //   if (route.params) {
-  //     const { admitId, aadhaar } = route.params;
-  //     fetchUsers(admitId);
-  //   }
-  // }, [route.params]);
 
   const onPressAddDiagnosis = () => {
     console.log("AddDiagnosis");
@@ -43,9 +38,9 @@ export default function LivePatientInfo() {
   }
 
   const onPressDiagnosisInfo = (diagnosis) => {
-    console.log("DiagnosisInfo", diagnosis);
-    navigation.navigate("DiagnosisInfo", {State:{admitId:diagnosis.admitId}});     
-  }
+    setSelectedDiagnosis(diagnosis);
+    setModalVisible(!modalVisible);
+  };
 
   const fetchLivePatient = async() =>{
     try{
@@ -65,8 +60,8 @@ export default function LivePatientInfo() {
         }
       );
       
-      setPatient(response.data.detail); 
-      fetchLiveDiagnosis();
+      setPatient(response.data.detail);
+      setDiagnosis(response.data.list);
       console.log("Patient: " + JSON.stringify(patient))
       console.log("api resp: " + JSON.stringify(response.data))
     }
@@ -75,33 +70,9 @@ export default function LivePatientInfo() {
     } 
   };
 
-  const fetchLiveDiagnosis = async() =>{
-    try{
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
-      const role = await AsyncStorage.getItem('role');
-      
-      const headers = {
-        'Authorization': token,
-        'ngrok-skip-browser-warning': "true",
-      }
-      
-      const response = await axios.get(
-        `https://present-neat-mako.ngrok-free.app/his/patient/viewOneLivePatient?admitId=${admitId}&userId=${userId}&role=${role}`,
-        {
-          headers: headers
-        }
-      );
-      
-      setDiagnosis(response.data.list); 
-      // console.log("Patient: " + JSON.stringify(diagnosis))
-      console.log("api resp: " + JSON.stringify(response.data))
-    }
-    catch (error) {
-      console.log("Error", error);
-    } 
+  const onClose = () => {
+    setModalVisible(false);
   };
-
 
   return (
     <View style={styles.container}>
@@ -112,7 +83,7 @@ export default function LivePatientInfo() {
               <View style={styles.infoContainer}>
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
-                  <Text style={styles.label}>Aadhaar Number:</Text>
+                  <Text style={styles.label}>Aadhaar No:</Text>
                   <Text style={styles.label}>{patient.aadhaar}</Text>
                 </View>
                 <View style={styles.infoRow}>
@@ -137,11 +108,11 @@ export default function LivePatientInfo() {
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Patient Type:</Text>
-                  <Text style={styles.tableData}>{patient.patientType}</Text>
+                  <Text style={styles.label}>{patient.patientType}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Date of Birth:</Text>
-                  <Text style={styles.tableData}>{patient.birthDate}</Text>
+                  <Text style={styles.label}>{patient.birthDate}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Blood group:</Text>
@@ -154,35 +125,65 @@ export default function LivePatientInfo() {
                 <TouchableOpacity style={styles.button} onPress={onPressAddDiagnosis}>
                   <Text style={styles.buttonText}>Add Diagnosis</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity style={styles.button} onPress={onPressBack}>
-                  <Text style={styles.buttonText}>Back</Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </View> 
           <View style={styles.diagnosisContainer}>
-            {/* <PastDiagnosis diagnoses={diagnosis} /> */}
             <Text style={styles.tableHeading}>List of Diagnoses</Text>
             <View style={styles.table}>
               <View style={styles.tableHeaderRow}>
                 <Text style={styles.tableHeader}>Serial No.</Text>
-                {/* <Text style={styles.tableHeader}>Medicine</Text> */}
                 <Text style={styles.tableHeader}>Date and Time</Text>
                 <Text style={styles.tableHeader}>Remarks</Text>
               </View>
               {diagnoses.map((diagnosis, index) => (
                 <TouchableOpacity key={diagnosis.diagnosisId} onPress={() => onPressDiagnosisInfo(diagnosis)}>
                   <View style={styles.tableRow}>
-                    <Text style={styles.tableData}>{counter + index}</Text>
-                    {/* <Text style={styles.tableData}>{diagnosis.medicine}</Text> */}
+                    <Text style={styles.tableData}>{counter + index}</Text>\
                     <Text style={styles.tableData}>{diagnosis.date}</Text>
                     <Text style={styles.tableData}>{diagnosis.remarks}</Text>
                   </View>
                 </TouchableOpacity>
               ))}
             </View>
-          </View>     
+          </View>  
         </View>
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={onClose}
+      >
+        {selectedDiagnosis && (
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Diagnosis Details</Text>
+            <View style={styles.modalSection}>
+              <Text style={styles.modalSectionTitle}>Remarks:</Text>
+              <Text style={styles.modalSectionText}>{selectedDiagnosis.remarks}</Text>
+            </View>
+            <View style={styles.modalSection}>
+              <Text style={styles.modalSectionTitle}>Medicines:</Text>
+              {selectedDiagnosis.medicine && (
+                <FlatList
+                  data={Object.entries(selectedDiagnosis.medicine)}
+                  renderItem={({ item }) => (
+                    <View style={styles.medicineRow}>
+                      <Text style={styles.medicineText}>{item[0]}</Text>
+                      <Text style={styles.medicineText}>Count: {item[1]}</Text>
+                    </View>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
+            </View>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        )}
+      </Modal>
     </View>
   );
 }
@@ -290,5 +291,52 @@ const styles = StyleSheet.create({
   tableData: {
     flex: 1,
     textAlign: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalSection: {
+    marginBottom: 20,
+  },
+  modalSectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  modalSectionText: {
+    fontSize: 14,
+  },
+  medicineRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  medicineText: {
+    fontSize: 14,
+  },
+  closeButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignSelf: 'flex-end',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

@@ -32,17 +32,17 @@ const SettingsScreen = () => {
       <View style={styles.container}>
         <Text style={styles.heading}>Settings</Text>
         <TouchableOpacity style={styles.button} onPress={onPressViewProfile}>
-            <Text style={styles.buttonText}>View Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={onPressUpdateProfile}>
-            <Text style={styles.buttonText}>Update Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={onPressChangePassword}>
-            <Text style={styles.buttonText}>Change Password</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={onPressLogout}>
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
+          <Text style={styles.buttonText}>View Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onPressUpdateProfile}>
+          <Text style={styles.buttonText}>Update Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onPressChangePassword}>
+          <Text style={styles.buttonText}>Change Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onPressLogout}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.navigation}>
         <AppNavigation />
