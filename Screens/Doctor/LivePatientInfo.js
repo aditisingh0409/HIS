@@ -139,7 +139,7 @@ export default function LivePatientInfo() {
               {diagnoses.map((diagnosis, index) => (
                 <TouchableOpacity key={diagnosis.diagnosisId} onPress={() => onPressDiagnosisInfo(diagnosis)}>
                   <View style={styles.tableRow}>
-                    <Text style={styles.tableData}>{counter + index}</Text>\
+                    <Text style={styles.tableData}>{counter + index}</Text>
                     <Text style={styles.tableData}>{diagnosis.date}</Text>
                     <Text style={styles.tableData}>{diagnosis.remarks}</Text>
                   </View>

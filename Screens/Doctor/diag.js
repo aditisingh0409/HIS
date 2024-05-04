@@ -5,13 +5,16 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleSheet, Picker, Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 const AddDiagnosis = () => {
+  const [remarks, setRemarks] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [count, setCount] = useState('');
   const [medicines, setMedicines] = useState([]);
-  const [document,setDocument] = useState(null);
-  
+  const [diagImage,setDiagImage] = useState(null);
+  const [discharge, setDischarge] = useState('');
+
   const navigation = useNavigation();
 
   const route = useRoute();
@@ -23,17 +26,6 @@ const AddDiagnosis = () => {
     discharge: "",
   });
 
-  const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  formData["admitId"]=admitId;
-  formData["patientId"]=aadhaar;
-  formData["medicine"]=medicines;
-
   const handleAddMedicine = () => {
     if (medicineName && count) {
       setMedicines([...medicines, { name: medicineName, count: count }]);
@@ -41,6 +33,68 @@ const AddDiagnosis = () => {
       setCount('');
     }
   };
+
+  formData["admitId"]=admitId;
+  formData["patientId"]=aadhaar;
+  formData["medicine"]=medicines;
+  
+  // console.log("see data",JSON.stringify(formData));
+
+  const newObject = {
+    file:diagImage,
+    request : JSON.stringify(formData)
+  }
+  // console.log("seee data:",JSON.stringify(newObject));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      const role = await AsyncStorage.getItem('role');
+
+      // const formData = new FormData();
+      // formData.append('remarks', remarks);
+      // // formData.append('discharge', discharge);
+      // formData.append('medicine', JSON.stringify(medicineName));
+
+      const response = await axios.post(
+        `https://present-neat-mako.ngrok-free.app/his/patient/addDiagnosis?role=${role}&userId=${userId}`,
+        newObject,
+        {
+          headers: {
+            Authorization: token,
+            'ngrok-skip-browser-warning': 'true',
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+
+      console.log('API Response:', response.data);
+      console.log(formData);
+      setFormData({
+        remarks: "",
+        discharge: "",
+   
+      });
+      alert('Diagnosis Added Successfully');
+      // setRemarks('');
+      // setDischarge('');
+      // setMedData({});
+      // ToastAndroid.show('Diagnosis added successfully', ToastAndroid.SHORT);
+      navigation.navigate('DocDashboard');
+    } 
+    catch (error) {
+      console.error('Error:', error.message);
+      // ToastAndroid.show('Error adding diagnosis. Please try again.', ToastAndroid.SHORT);
+    }
+  };
+  // const handleSubmit = () => {
+  //   // Handle form submission logic here
+  //   console.log('Remarks:', remarks);
+  //   console.log('Medicines:', medicines);
+  // };
 
   const handleIncreaseCount = (index) => {
     const updatedMedicines = [...medicines];
@@ -67,60 +121,39 @@ const AddDiagnosis = () => {
     setMedicines(updatedMedicines);
   };
 
-  const newFile = {
-    file:document,
-    // request : JSON.stringify(formData)
-  }
+    // const [form, setForm] = useState({
+  //   title: "",
+  //   video: null,
+  //   thumbnail: null,
+  //   prompt: "",
+  // });
 
-  const handleSubmit = async (formData) => {
-    try {
-      const userId = await AsyncStorage.getItem("userId");
-      const token = await AsyncStorage.getItem("token");
-      const role = await AsyncStorage.getItem("role");
-  
-      const headers = {
-        Authorization: token,
-        "ngrok-skip-browser-warning": "true",
-        "Content-Type": "multipart/form-data",
-      };
-  
-      const response = await axios.post(
-        `https://present-neat-mako.ngrok-free.app/his/patient/addDiagnosis?role=${role}&userId=${userId}`,
-        newFile,
-        {
-          headers: headers,
-          body: formData
-        }
-      );
-  
-      const data = await response.json();
-  
-      console.log("API Response: " + JSON.stringify(data));
-  
-      if (response.ok) {
-        console.log(formData);
-        alert("Diagnosis added successfully");
-        navigation.replace  ("DocDashboard");
-      } else {
-        throw new Error("Error adding diagnosis");
-      }
-    } catch (error) {
-      console.log("Error", error);
-      // toast.error("Error adding diagnosis. Please try again.");
-    }
-  };
+  // const handleSubmit = () => {
+  //   // Perform submission logic here, using the form values
+  //   console.log({
+  //     admitId,
+  //     remarks,
+  //     bloodPressure,
+  //     oxygenLevel,
+  //     reportFile,
+  //     isDischarged,
+  //     medicineList,
+  //   });
+  // };
 
   const openPicker = async (selectType) => {
     let acceptedTypes;
     let alertMessage;
   
-    if (selectType === "doc") {
-      acceptedTypes = ["image/png", "image/jpeg","application/pdf", "application/msword", 
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-      alertMessage = "Please select a document or image file.";
+    if (selectType === "image") {
+      acceptedTypes = ["image/png", "image/jpeg"];
+      alertMessage = "Please select an image (PNG or JPEG) file.";
+    } else if (selectType === "doc") {
+      acceptedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+      alertMessage = "Please select a document (PDF or DOC) file.";
     } else {
       // Unsupported type
-      alert("Unsupported File Type", "Only images (PNG, JPEG) and documents (PDF, DOC) are supported.");
+      Alert.alert("Unsupported File Type", "Only images (PNG, JPEG) and documents (PDF, DOC) are supported.");
       return;
     }
   
@@ -128,9 +161,6 @@ const AddDiagnosis = () => {
       const result = await DocumentPicker.getDocumentAsync({
         type: acceptedTypes,
       });
-
-      console.log("Selected file type:", result.type);
-      console.log("Accepted types:", acceptedTypes);
   
       if (result.type === "cancel") {
         // User canceled
@@ -139,20 +169,18 @@ const AddDiagnosis = () => {
   
       if (!acceptedTypes.includes(result.type)) {
         // File type not supported
-        alert("Unsupported File Type", alertMessage);
+        Alert.alert("Unsupported File Type", alertMessage);
         return;
       }
   
       // Handle the selected file
-      setDocument(result);
       console.log("Selected file:", result);
-    } 
-    catch (error) {
+    } catch (error) {
       // Handle any errors
       console.error("Error selecting document:", error);
-      alert("Error", "An error occurred while selecting the document. Please try again.");
+      Alert.alert("Error", "An error occurred while selecting the document. Please try again.");
     }
-  };
+  };  
 
   const renderMedicine = ({ item, index }) => (
     <View style={styles.medicineItem}>
@@ -187,19 +215,21 @@ const AddDiagnosis = () => {
       }
     })();
   }, []);
-
+  
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.heading}>Add Diagnosis</Text>
-        <Text style={styles.label}>Remarks</Text>
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Remarks:</Text>
         <TextInput
           style={styles.input}
+          multiline
           value={formData.remarks}
-          onChangeText={(text) => handleChange('remarks', text)}
-          multiline={true}
+          onChangeText={setRemarks}
         />
+      </View>
 
-        <View style={styles.formGroup}>
+      <View style={styles.formGroup}>
         <Text style={styles.label}>Medicine Name:</Text>
         <TextInput
           style={styles.input}
@@ -234,11 +264,11 @@ const AddDiagnosis = () => {
       )}
 
     <View style={styles.uploadContainer}>
-      {/* <TouchableOpacity onPress={() => openPicker("image")}>
+      <TouchableOpacity onPress={() => openPicker("image")}>
           <View style={styles.uploadOption}>
             <Text>Upload Image</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => openPicker("doc")}>
           <View style={styles.uploadOption}>
             <Text>Upload Document</Text>
@@ -246,18 +276,16 @@ const AddDiagnosis = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Discharge</Text>
-        <Picker
-          selectedValue={formData.discharge}
-          style={styles.picker}
-          onValueChange={(itemValue) => handleChange('discharge', itemValue)}
-        >
-          <Picker.Item label="Select" value="" />
-          <Picker.Item label="NO" value="0" />
-          <Picker.Item label="YES" value="1" />
-        </Picker>
-      </View>
+      <Text style={styles.label}>Discharge</Text>
+      <Picker
+        selectedValue={formData.discharge}
+        onValueChange={(itemValue) => handleChange(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Select" value="" />
+        <Picker.Item label="NO" value="0" />
+        <Picker.Item label="YES" value="1" />
+      </Picker>
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
@@ -271,9 +299,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#FFFFFF',
-  },
-  inputContainer: {
-    marginBottom: 20,
   },
   formGroup: {
     marginBottom: 16,
@@ -373,7 +398,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 5,
-    backgroundColor: '#FFFFFF',
   },
 });
 
