@@ -10,6 +10,7 @@ import axios from 'axios';
 export default function DocDashboard() {
   const [isOpen, setIsOpen] = useState(true);
   const [patients, setPatients] = useState([]);
+  const [emergencies, setEmergency] = useState([]);
   const navigation = useNavigation();
 
   const [IpCount, setIpCount] = useState(0);
@@ -41,6 +42,7 @@ export default function DocDashboard() {
         console.log("API response of user : "+JSON.stringify(response.data))
         setOpCount(response.data.opPatient);
         setIpCount(response.data.ipPatient);
+        fetchEmergencies();
         fetchPatients(); // Fetch patients data when the component mounts
       } 
       else {
@@ -48,6 +50,33 @@ export default function DocDashboard() {
       }
     } catch (error) {
       console.log("Error here", error);
+    }
+  };
+
+  const fetchEmergencies = async () => {
+    try {
+
+      const userId = await AsyncStorage.getItem("userId");
+      const token = await AsyncStorage.getItem("token");
+
+      const headers = {
+        Authorization: token,
+        "ngrok-skip-browser-warning": "true",
+      };
+      
+      const response = await axios.get(
+        `https://present-neat-mako.ngrok-free.app/his/doc/handleEmergency?userId=${userId}&emerId=EMER1714742648088`,
+      {
+        headers: headers,  
+      }
+    );
+      
+      console.log("API response of patient list : "+JSON.stringify(response.data))
+      
+      // Update the state variable with the fetched patients data
+      setEmergency(response.data.response);
+    } catch (error) {
+      console.log('Error fetching emergencies:', error);
     }
   };
 
@@ -108,9 +137,32 @@ export default function DocDashboard() {
               <Text style={styles.label}>Outpatients</Text>
             </View>
           </View>
+
+          {/*Emergencies Table */}
+          <View style={styles.patientsContainer}>
+            <Text style={styles.heading}>List of Emergencies</Text>
+            <View style={styles.table}>
+              <View style={styles.tableHeaderRow}>
+                <Text style={styles.tableHeader}>Aadhaar ID</Text>
+                <Text style={styles.tableHeader}>First Name</Text>
+                <Text style={styles.tableHeader}>Last Name</Text>
+                <Text style={styles.tableHeader}>Remarks</Text>
+              </View>
+              {emergencies.map(emergency => (
+                <TouchableOpacity key={emergency.aadhaar} onPress={() => onPressLivePatientInfo(emergency)}>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableData}>{emergency.aadhaar}</Text>
+                    <Text style={styles.tableData}>{emergency.firstName}</Text>
+                    <Text style={styles.tableData}>{emergency.lastName}</Text>
+                    <Text style={styles.tableData}>{emergency.remark}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          
           {/* Patients Table */}
           <View style={styles.patientsContainer}>
-            {/* <Patients patients={patients} /> */}
             <Text style={styles.heading}>List of Out Patients</Text>
             <View style={styles.table}>
               <View style={styles.tableHeaderRow}>

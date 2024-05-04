@@ -5,11 +5,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleSheet, Picker, Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 const AddDiagnosis = () => {
   const [medicineName, setMedicineName] = useState('');
-  const [count, setCount] = useState('');
-  const [medicines, setMedicines] = useState([]);
+  const [count, setCount] = useState(0);
+  const [medicines, setMedicines] = useState({});
   const [document,setDocument] = useState(null);
   
   const navigation = useNavigation();
@@ -34,45 +35,93 @@ const AddDiagnosis = () => {
   formData["patientId"]=aadhaar;
   formData["medicine"]=medicines;
 
+  // const handleAddMedicine = () => {
+  //   if (medicineName && count) {
+  //     setMedicines([...medicines, { medicineName: count }]);
+  //     setMedicineName('');
+  //     setCount('');
+  //   }
+  // };
+
   const handleAddMedicine = () => {
-    if (medicineName && count) {
-      setMedicines([...medicines, { name: medicineName, count: count }]);
-      setMedicineName('');
-      setCount('');
-    }
+    setMedicines(medicines => ({
+      ...medicines,
+      [medicineName]: count
+    }));
+  //   setMedicines(...medicines,{
+  //     medicineName: count
+  // });
+    setMedicineName('');
+    setCount(0); // Reset count after adding
   };
+
+  // const handleIncreaseCount = (index) => {
+  //   const updatedMedicines = [...medicines];
+  //   updatedMedicines[index].count = Number(updatedMedicines[index].count) + 1;
+  //   setMedicines(updatedMedicines);
+  // };
 
   const handleIncreaseCount = (index) => {
-    const updatedMedicines = [...medicines];
-    updatedMedicines[index].count = Number(updatedMedicines[index].count) + 1;
-    setMedicines(updatedMedicines);
+    setMedicines(medicines => ({
+      ...medicines,
+      [index]: medicines[index] + 1
+    }));
+    
+    //   setMedicines(
+  //     ...medicines,
+  //     {index: medicines[index] + 1
+  // });
   };
 
-  const handleDecreaseCount = (index) => {
-    const updatedMedicines = [...medicines];
-    if (updatedMedicines[index].count > 1) {
-      updatedMedicines[index].count -= 1;
-      setMedicines(updatedMedicines);
-    } 
-    else {
-      // Remove medicine if count reaches 0
-      updatedMedicines.splice(index, 1);
-      setMedicines(updatedMedicines);
-    }
-  };
+  // const handleDecreaseCount = (index) => {
+  //   const updatedMedicines = [...medicines];
+  //   if (updatedMedicines[index].count > 1) {
+  //     updatedMedicines[index].count -= 1;
+  //     setMedicines(updatedMedicines);
+  //   } 
+  //   else {
+  //     // Remove medicine if count reaches 0
+  //     updatedMedicines.splice(index, 1);
+  //     setMedicines(updatedMedicines);
+  //   }
+  // };
+
+  // const handleRemoveMedicine = (index) => {
+  //   const updatedMedicines = [...medicines];
+  //   updatedMedicines.splice(index, 1);
+  //   setMedicines(updatedMedicines);
+  // };
 
   const handleRemoveMedicine = (index) => {
-    const updatedMedicines = [...medicines];
-    updatedMedicines.splice(index, 1);
-    setMedicines(updatedMedicines);
+    // if (medicineName[index] > 1) {
+    //   setMedicines(
+    //     ...medicines,
+    //     {index: medicines[index] - 1
+    // });
+    // } else {
+    //   const updatedData = { ...medicines };
+    //   delete updatedData[index];
+    //   setMedicines(updatedData);
+    // }
+    if (medicineName[index] > 1) {
+      setMedicines(medicines => ({
+        ...medicines,
+        [index]: medicines[index] - 1
+      }));
+    } else {
+      const updatedData = { ...medicines };
+      delete updatedData[index];
+      setMedData(updatedData);
+    }
   };
 
   const newFile = {
-    file:document,
-    // request : JSON.stringify(formData)
+    file: document,
+    request : JSON.stringify(formData)
   }
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async () => {
+    
     try {
       const userId = await AsyncStorage.getItem("userId");
       const token = await AsyncStorage.getItem("token");
@@ -84,17 +133,18 @@ const AddDiagnosis = () => {
         "Content-Type": "multipart/form-data",
       };
   
+      console.log("FormData:", newFile);
+      
       const response = await axios.post(
         `https://present-neat-mako.ngrok-free.app/his/patient/addDiagnosis?role=${role}&userId=${userId}`,
         newFile,
         {
           headers: headers,
-          body: formData
+          // body: formData
         }
       );
   
-      const data = await response.json();
-  
+      const data = response.data;
       console.log("API Response: " + JSON.stringify(data));
   
       if (response.ok) {
@@ -104,7 +154,8 @@ const AddDiagnosis = () => {
       } else {
         throw new Error("Error adding diagnosis");
       }
-    } catch (error) {
+    } 
+    catch (error) {
       console.log("Error", error);
       // toast.error("Error adding diagnosis. Please try again.");
     }
@@ -126,10 +177,11 @@ const AddDiagnosis = () => {
   
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: acceptedTypes,
+        type: "*/*",
       });
 
       console.log("Selected file type:", result.type);
+      console.log("result:", result);
       console.log("Accepted types:", acceptedTypes);
   
       if (result.type === "cancel") {
@@ -137,15 +189,17 @@ const AddDiagnosis = () => {
         return;
       }
   
-      if (!acceptedTypes.includes(result.type)) {
-        // File type not supported
-        alert("Unsupported File Type", alertMessage);
-        return;
-      }
+      // if (!acceptedTypes.includes(result.type)) {
+      //   // File type not supported
+      //   alert("Unsupported File Type", alertMessage);
+      //   return;
+      // }
   
       // Handle the selected file
-      setDocument(result);
-      console.log("Selected file:", result);
+      // setDocument(result.assets[0]);
+      // console.log("Selected file:", document);
+      console.log("Selected file:", result.assets[0]);
+      setDocument(result.assets[0]);
     } 
     catch (error) {
       // Handle any errors
@@ -156,12 +210,12 @@ const AddDiagnosis = () => {
 
   const renderMedicine = ({ item, index }) => (
     <View style={styles.medicineItem}>
-      <Text style={styles.medicineName}>{item.name}</Text>
+      <Text style={styles.medicineName}>{item[0]}</Text>
       <View style={styles.countContainer}>
-        <TouchableOpacity style={styles.countButton} onPress={() => handleDecreaseCount(index)}>
+        <TouchableOpacity style={styles.countButton} onPress={() => handleRemoveMedicine(index)}>
           <Text style={styles.countButtonText}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.countText}>{item.count}</Text>
+        <Text style={styles.countText}>{item[1]}</Text>
         <TouchableOpacity style={styles.countButton} onPress={() => handleIncreaseCount(index)}>
           <Text style={styles.countButtonText}>+</Text>
         </TouchableOpacity>
@@ -222,16 +276,30 @@ const AddDiagnosis = () => {
         <Text style={styles.buttonText}>Add Medicine</Text>
       </TouchableOpacity>
 
-      {medicines.length > 0 && (
+      {Object.keys(medicines).length > 0 && (
         <View style={styles.medicinesList}>
           <Text style={styles.medicinesListTitle}>Added Medicines:</Text>
           <FlatList
-            data={medicines}
+            data={Object.entries(medicines)}
             renderItem={renderMedicine}
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
       )}
+
+      {/* {Object.keys(medicines).length > 0 && (
+        <View style={styles.medicinesList}>
+          <Text style={styles.medicinesListTitle}>Added Medicines:</Text>
+          <FlatList
+            data={Object.entries(medicines)}
+            renderItem={({ item }) => (
+              <Text>{item[0]}: {item[1]}</Text>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      )} */}
+
 
     <View style={styles.uploadContainer}>
       {/* <TouchableOpacity onPress={() => openPicker("image")}>
@@ -248,7 +316,7 @@ const AddDiagnosis = () => {
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Discharge</Text>
-        <Picker
+        {/* <Picker
           selectedValue={formData.discharge}
           style={styles.picker}
           onValueChange={(itemValue) => handleChange('discharge', itemValue)}
@@ -256,7 +324,28 @@ const AddDiagnosis = () => {
           <Picker.Item label="Select" value="" />
           <Picker.Item label="NO" value="0" />
           <Picker.Item label="YES" value="1" />
-        </Picker>
+        </Picker> */}
+        <RNPickerSelect
+          style={{
+            inputIOS: {
+              // backgroundColor: 'white', 
+              color: 'black',
+            },
+            inputAndroid: {
+              // backgroundColor: 'white',
+              color: 'black',
+            },
+            placeholder: { // Style for placeholder text
+              color: 'gray', 
+            },
+          }}
+          onValueChange={(value) => handleChange('discharge',value)}
+          items={[
+            { label: 'NO', value: '0' },
+            { label: 'YES', value: '1' },
+          ]}
+          value={formData.discharge}
+        />
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
