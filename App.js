@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="DocDashboard"
+      <Stack.Navigator initialRouteName="Login"
       screenOptions={({ route }) => ({
         // headerRight: () => (
         //   <View>

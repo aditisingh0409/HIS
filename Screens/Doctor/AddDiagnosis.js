@@ -12,6 +12,7 @@ const AddDiagnosis = () => {
   const [count, setCount] = useState(0);
   const [medicines, setMedicines] = useState({});
   const [document,setDocument] = useState(null);
+  const [selectedValue, setSelectedValue] = useState('0');
   
   const navigation = useNavigation();
 
@@ -31,6 +32,10 @@ const AddDiagnosis = () => {
     });
   };
 
+  const handleValueChange = (value) => {
+    setSelectedValue(value);
+  };
+
   formData["admitId"]=admitId;
   formData["patientId"]=aadhaar;
   formData["medicine"]=medicines;
@@ -44,10 +49,13 @@ const AddDiagnosis = () => {
   // };
 
   const handleAddMedicine = () => {
-    setMedicines(medicines => ({
-      ...medicines,
-      [medicineName]: count
-    }));
+    // const newMedicine = { [medicineName]: { count } };
+    setMedicines(medicines => ({ ...medicines, [medicineName]:  count  }));
+  
+    // setMedicines(medicines => ({
+    //   ...medicines,
+    //   [medicineName]: count
+    // }));
   //   setMedicines(...medicines,{
   //     medicineName: count
   // });
@@ -55,65 +63,67 @@ const AddDiagnosis = () => {
     setCount(0); // Reset count after adding
   };
 
-  // const handleIncreaseCount = (index) => {
-  //   const updatedMedicines = [...medicines];
-  //   updatedMedicines[index].count = Number(updatedMedicines[index].count) + 1;
-  //   setMedicines(updatedMedicines);
-  // };
-
   const handleIncreaseCount = (index) => {
-    setMedicines(medicines => ({
-      ...medicines,
-      [index]: medicines[index] + 1
-    }));
-    
-    //   setMedicines(
-  //     ...medicines,
-  //     {index: medicines[index] + 1
-  // });
+    const updatedMedicines = { ...medicines };
+    updatedMedicines[index].count += 1;
+    // updatedMedicines[index].count = Number(updatedMedicines[index].count) + 1;
+    setMedicines(updatedMedicines);
   };
 
-  // const handleDecreaseCount = (index) => {
-  //   const updatedMedicines = [...medicines];
-  //   if (updatedMedicines[index].count > 1) {
-  //     updatedMedicines[index].count -= 1;
-  //     setMedicines(updatedMedicines);
-  //   } 
-  //   else {
-  //     // Remove medicine if count reaches 0
-  //     updatedMedicines.splice(index, 1);
-  //     setMedicines(updatedMedicines);
-  //   }
+  // const handleIncreaseCount = (index) => {
+  //   setMedicines(medicines => ({
+  //     ...medicines,
+  //     [index]: medicines[index] + 1
+  //   }));
+    
+  //   //   setMedicines(
+  // //     ...medicines,
+  // //     {index: medicines[index] + 1
+  // // });
   // };
 
-  // const handleRemoveMedicine = (index) => {
-  //   const updatedMedicines = [...medicines];
-  //   updatedMedicines.splice(index, 1);
-  //   setMedicines(updatedMedicines);
-  // };
-
-  const handleRemoveMedicine = (index) => {
-    // if (medicineName[index] > 1) {
-    //   setMedicines(
-    //     ...medicines,
-    //     {index: medicines[index] - 1
-    // });
-    // } else {
-    //   const updatedData = { ...medicines };
-    //   delete updatedData[index];
-    //   setMedicines(updatedData);
-    // }
-    if (medicineName[index] > 1) {
-      setMedicines(medicines => ({
-        ...medicines,
-        [index]: medicines[index] - 1
-      }));
-    } else {
-      const updatedData = { ...medicines };
-      delete updatedData[index];
-      setMedData(updatedData);
+  const handleDecreaseCount = (index) => {
+    const updatedMedicines = {...medicines};
+    if (updatedMedicines[index].count > 1) {
+      updatedMedicines[index].count -= 1;
+      setMedicines(updatedMedicines);
+    } 
+    else {
+      // Remove medicine if count reaches 0
+      delete updatedMedicines[index];
+      setMedicines(updatedMedicines);
     }
   };
+
+  const handleRemoveMedicine = (index) => {
+    const updatedMedicines = {...medicines};
+    delete updatedMedicines[index];
+    // updatedMedicines.splice(index, 1);
+    setMedicines(updatedMedicines);
+  };
+
+  // const handleRemoveMedicine = (index) => {
+  //   // if (medicineName[index] > 1) {
+  //   //   setMedicines(
+  //   //     ...medicines,
+  //   //     {index: medicines[index] - 1
+  //   // });
+  //   // } else {
+  //   //   const updatedData = { ...medicines };
+  //   //   delete updatedData[index];
+  //   //   setMedicines(updatedData);
+  //   // }
+  //   if (medicineName[index] > 1) {
+  //     setMedicines(medicines => ({
+  //       ...medicines,
+  //       [index]: medicines[index] - 1
+  //     }));
+  //   } else {
+  //     const updatedData = { ...medicines };
+  //     delete updatedData[index];
+  //     setMedicines(updatedData);
+  //   }
+  // };
 
   const newFile = {
     file: document,
@@ -140,66 +150,34 @@ const AddDiagnosis = () => {
         newFile,
         {
           headers: headers,
-          // body: formData
         }
       );
   
       const data = response.data;
       console.log("API Response: " + JSON.stringify(data));
-  
-      if (response.ok) {
-        console.log(formData);
-        alert("Diagnosis added successfully");
-        navigation.replace  ("DocDashboard");
-      } else {
-        throw new Error("Error adding diagnosis");
-      }
+      alert("Diagnosis added successfully");
+      navigation.replace("DocDashboard");
     } 
     catch (error) {
       console.log("Error", error);
-      // toast.error("Error adding diagnosis. Please try again.");
     }
   };
 
-  const openPicker = async (selectType) => {
-    let acceptedTypes;
-    let alertMessage;
-  
-    if (selectType === "doc") {
-      acceptedTypes = ["image/png", "image/jpeg","application/pdf", "application/msword", 
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-      alertMessage = "Please select a document or image file.";
-    } else {
-      // Unsupported type
-      alert("Unsupported File Type", "Only images (PNG, JPEG) and documents (PDF, DOC) are supported.");
-      return;
-    }
-  
+  const openPicker = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: "*/*",
       });
 
-      console.log("Selected file type:", result.type);
-      console.log("result:", result);
-      console.log("Accepted types:", acceptedTypes);
-  
-      if (result.type === "cancel") {
+      if (result.type === "cancel" || !result.assets) {
         // User canceled
+        console.log("User canceled file operation");
         return;
       }
   
-      // if (!acceptedTypes.includes(result.type)) {
-      //   // File type not supported
-      //   alert("Unsupported File Type", alertMessage);
-      //   return;
-      // }
-  
-      // Handle the selected file
-      // setDocument(result.assets[0]);
-      // console.log("Selected file:", document);
-      console.log("Selected file:", result.assets[0]);
-      setDocument(result.assets[0]);
+      console.log("Selected file:", result.assets[0].file);
+      setDocument(result.assets[0].file);
+      
     } 
     catch (error) {
       // Handle any errors
@@ -212,7 +190,7 @@ const AddDiagnosis = () => {
     <View style={styles.medicineItem}>
       <Text style={styles.medicineName}>{item[0]}</Text>
       <View style={styles.countContainer}>
-        <TouchableOpacity style={styles.countButton} onPress={() => handleRemoveMedicine(index)}>
+        <TouchableOpacity style={styles.countButton} onPress={() => handleDecreaseCount(index)}>
           <Text style={styles.countButtonText}>-</Text>
         </TouchableOpacity>
         <Text style={styles.countText}>{item[1]}</Text>
@@ -302,12 +280,7 @@ const AddDiagnosis = () => {
 
 
     <View style={styles.uploadContainer}>
-      {/* <TouchableOpacity onPress={() => openPicker("image")}>
-          <View style={styles.uploadOption}>
-            <Text>Upload Image</Text>
-          </View>
-        </TouchableOpacity> */}
-        <TouchableOpacity onPress={() => openPicker("doc")}>
+      <TouchableOpacity onPress={() => openPicker()}>
           <View style={styles.uploadOption}>
             <Text>Upload Document</Text>
           </View>
@@ -326,25 +299,23 @@ const AddDiagnosis = () => {
           <Picker.Item label="YES" value="1" />
         </Picker> */}
         <RNPickerSelect
-          style={{
-            inputIOS: {
-              // backgroundColor: 'white', 
-              color: 'black',
-            },
-            inputAndroid: {
-              // backgroundColor: 'white',
-              color: 'black',
-            },
-            placeholder: { // Style for placeholder text
-              color: 'gray', 
-            },
-          }}
-          onValueChange={(value) => handleChange('discharge',value)}
+          // style={{
+          //   inputIOS: {
+          //     color: 'black',
+          //   },
+          //   inputAndroid: {
+          //     color: 'black',
+          //   },
+          //   placeholder: {
+          //     color: 'white', 
+          //   },
+          // }}
+          onValueChange={(value) => handleChange('discharge', value)}
           items={[
             { label: 'NO', value: '0' },
             { label: 'YES', value: '1' },
           ]}
-          value={formData.discharge}
+          value={formData.discharge || '0'} // Set default value to 'NO'
         />
       </View>
 
@@ -463,6 +434,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 5,
     backgroundColor: '#FFFFFF',
+    padding: 20,
   },
 });
 
