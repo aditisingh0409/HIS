@@ -6,6 +6,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleShe
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import RNPickerSelect from 'react-native-picker-select';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import Voice from '@react-native-voice/voice';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Camera } from 'expo-camera';
 
 const AddDiagnosis = () => {
   const [medicineName, setMedicineName] = useState('');
@@ -13,6 +17,9 @@ const AddDiagnosis = () => {
   const [medicines, setMedicines] = useState({});
   const [document,setDocument] = useState(null);
   const [selectedValue, setSelectedValue] = useState('0');
+
+  const [remarks, setRemarks] = useState('');
+  const [isListening, setIsListening] = useState(false);
   
   const navigation = useNavigation();
 
@@ -24,6 +31,37 @@ const AddDiagnosis = () => {
     remarks: "",
     discharge: "",
   });
+
+  const startSpeechToText = async () => {
+    try {
+      // Check and request microphone permission
+      const permission = await Camera.getMicrophonePermissionsAsync();
+      if (permission === RESULTS.GRANTED) {
+        setIsListening(true);
+        Voice.start('en-US');
+      } else {
+        console.error('Microphone permission denied');
+      }
+    } catch (error) {
+      console.error('Error starting speech-to-text:', error);
+    }
+  };
+
+  const onSpeechResults = (event) => {
+    setIsListening(false);
+    setRemarks(event.value[0]); // Set the speech-to-text result to remarks state
+  };
+
+  // Function to handle speech-to-text errors
+  const onSpeechError = (error) => {
+    console.error('Speech-to-text error:', error);
+    setIsListening(false);
+  };
+
+  // Function to stop speech-to-text
+  const stopSpeechToText = () => {
+    Voice.stop();
+  };
 
   const handleChange = (name, value) => {
     setFormData({
@@ -50,7 +88,10 @@ const AddDiagnosis = () => {
 
   const handleAddMedicine = () => {
     // const newMedicine = { [medicineName]: { count } };
-    setMedicines(medicines => ({ ...medicines, [medicineName]:  count  }));
+    setMedicines((medicines) => 
+      ({ ...medicines, 
+      [medicineName]:  count 
+    }));
   
     // setMedicines(medicines => ({
     //   ...medicines,
@@ -70,17 +111,14 @@ const AddDiagnosis = () => {
     setMedicines(updatedMedicines);
   };
 
-  // const handleIncreaseCount = (index) => {
-  //   setMedicines(medicines => ({
-  //     ...medicines,
-  //     [index]: medicines[index] + 1
-  //   }));
-    
-  //   //   setMedicines(
-  // //     ...medicines,
-  // //     {index: medicines[index] + 1
-  // // });
-  // };
+  // // const handleIncreaseCount = (index) => {
+  // //   if (medicines.hasOwnProperty(index)) {
+  // //     setMedicines((medicines) => ({
+  // //       ...medicines,
+  // //       [index]: medicines[index] + 1
+  // //     }));
+  // //   }
+  // // };
 
   const handleDecreaseCount = (index) => {
     const updatedMedicines = {...medicines};
@@ -123,6 +161,53 @@ const AddDiagnosis = () => {
   //     delete updatedData[index];
   //     setMedicines(updatedData);
   //   }
+  // };
+  
+  // const handleIncreaseCount = (index) => {
+  //   setMedicines((prevMedicines) => {
+  //     const updatedMedicines = { ...prevMedicines };
+  //     updatedMedicines[index] += 1; // Increase count by one
+  //     return updatedMedicines;
+  //   });
+  // };
+  
+  // const handleDecreaseCount = (index) => {
+  //   setMedicines((prevMedicines) => {
+  //     const updatedMedicines = { ...prevMedicines };
+  //     if (updatedMedicines[index] > 0) {
+  //       updatedMedicines[index] -= 1; // Decrease count by one if it's greater than 0
+  //     }
+  //     return updatedMedicines;
+  //   });
+  // };
+  
+  // const handleRemoveMedicine = (index) => {
+  //   setMedicines((prevMedicines) => {
+  //     const updatedMedicines = { ...prevMedicines };
+  //     delete updatedMedicines[index]; // Remove the medicine entry altogether
+  //     return updatedMedicines;
+  //   });
+  // };
+
+  // const handleRemoveMedicine = (index) => {
+  //   if (medicines[index] > 1) {
+  //     setMedicines(medicines => ({
+  //       ...medicines,
+  //       [index]: medicines[index] - 1
+  //     }));
+  //   } else {
+  //     const updatedData = { ...medicines };
+  //     delete updatedData[index];
+  //     setMedicines(updatedData);
+  //   }
+  // };
+
+  // // Function to handle increasing count for existing key
+  // const handleIncreaseCount = (index) => {
+  //   setMedicines(medicines => ({
+  //     ...medicines,
+  //     [index]: medicines[index] ? medicines[index] + 1 : 1
+  //   }));
   // };
 
   const newFile = {
@@ -216,6 +301,20 @@ const AddDiagnosis = () => {
         if (cameraStatus.status !== 'granted') {
           Alert.alert('Sorry, we need camera permissions to make this work!');
         }
+
+        // const audioStatus = await requestPermissionsAsync();
+        // if (audioStatus.status !== 'granted') {
+        //   Alert.alert('Sorry, we need microphone permissions to make this work!');
+        // }
+        // const audioStatus = await requestPermissionsAsync();
+        // if (audioStatus.status !== 'granted') {
+        //   Alert.alert('Sorry, we need microphone permissions to make this work!');
+        // }
+        // startSpeechToText();
+        const audioStatus = await Camera.getMicrophonePermissionsAsync(); // Use requestPermissionsAsync from expo-permissions
+        if (audioStatus !== 'granted') {
+          console.log('Microphone permission denied');
+        }
       }
     })();
   }, []);
@@ -229,7 +328,22 @@ const AddDiagnosis = () => {
           value={formData.remarks}
           onChangeText={(text) => handleChange('remarks', text)}
           multiline={true}
+          editable={!isListening}
         />
+        
+        <View style={styles.uploadContainer}>
+          {/* <TouchableOpacity onPress={isListening ? stopSpeechToText : startSpeechToText}>
+            <Text>{isListening ? 'Stop Listening' : 'Start Listening'}</Text>
+          </TouchableOpacity>   */}
+          <TouchableOpacity onPress={isListening ? stopSpeechToText : startSpeechToText}>
+            <Icon name={isListening ? 'microphone' : 'microphone-slash'} size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openPicker()}>
+            <View style={styles.uploadOption}>
+              <Text>Upload Document</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.formGroup}>
         <Text style={styles.label}>Medicine Name:</Text>
@@ -277,15 +391,6 @@ const AddDiagnosis = () => {
           />
         </View>
       )} */}
-
-
-    <View style={styles.uploadContainer}>
-      <TouchableOpacity onPress={() => openPicker()}>
-          <View style={styles.uploadOption}>
-            <Text>Upload Document</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Discharge</Text>
@@ -336,7 +441,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   formGroup: {
-    marginBottom: 16,
+    marginTop: 16,
   },
   heading: {
     fontSize: 24,
@@ -360,7 +465,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     marginLeft: 20,
-    marginTop: 10,
+    marginTop: 20,
   },
   buttonText: {
     color: 'white',
@@ -417,7 +522,7 @@ const styles = StyleSheet.create({
   uploadContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   uploadOption: {

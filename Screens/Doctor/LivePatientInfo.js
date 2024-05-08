@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList, Linking } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 
 export default function LivePatientInfo() {
   const navigation = useNavigation();
-  const route = useRoute();
-
   const [counter, setCounter] = useState(1);
-  
   const [patient, setPatient] = useState([]);
   const [diagnoses, setDiagnosis] = useState([]);
-  const { State } = route.params; // Destructure State from route.params
-
-  const [showPopup, setShowPopup] = useState(false);
-  const [selectedDiagnosis, setSelectedDiagnosis] = useState(null); 
   
-  // Now you can access admitId and aadhaar from State object
-  const { admitId, aadhaar } = State;
+  const route = useRoute();
+  const { State } = route.params; 
 
+  const [selectedDiagnosis, setSelectedDiagnosis] = useState(null); 
   const [modalVisible, setModalVisible] = useState(false);
+  const { admitId, aadhaar } = State;
   
   useEffect(()=>{
       fetchLivePatient();
@@ -69,6 +65,45 @@ export default function LivePatientInfo() {
       console.log("Error", error);
     } 
   };
+
+  const onPressFile = async (diagnosisId, fileName) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      const role = await AsyncStorage.getItem('role');
+
+      const headers = {
+        'Authorization': token,
+        'ngrok-skip-browser-warning': "true",
+      }
+      
+      const response = await axios.get(
+        `https://present-neat-mako.ngrok-free.app/his/patient/getDiagnosisFile?userId=${userId}&role=${role}&diagnosisId=${diagnosisId}&fileName=${fileName}`,
+        {
+          headers: headers,
+          // responseType: 'blob', // Set response type to blob for binary data
+      });
+  
+      // Get the file name from the response headers
+      // const fileName = response.headers['content-disposition']
+      //   .split(';')[1]
+      //   .split('filename=')[1]
+      //   .trim();
+  
+      // Convert response data to Blob object
+      const blob = new Blob([response.data.stringContent], { type: 'application/octet-stream' });
+  
+      // Create object URL from Blob
+      const url = URL.createObjectURL(blob);
+  
+      // Automatically download the file using Linking
+      Linking.openURL(url);
+      
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      // Handle error
+    }
+  };  
 
   const onClose = () => {
     setModalVisible(false);
@@ -135,6 +170,7 @@ export default function LivePatientInfo() {
                 <Text style={styles.tableHeader}>Serial No.</Text>
                 <Text style={styles.tableHeader}>Date and Time</Text>
                 <Text style={styles.tableHeader}>Remarks</Text>
+                <Text style={styles.tableHeader}>File</Text>
               </View>
               {diagnoses.map((diagnosis, index) => (
                 <TouchableOpacity key={diagnosis.diagnosisId} onPress={() => onPressDiagnosisInfo(diagnosis)}>
@@ -142,6 +178,14 @@ export default function LivePatientInfo() {
                     <Text style={styles.tableData}>{counter + index}</Text>
                     <Text style={styles.tableData}>{diagnosis.date}</Text>
                     <Text style={styles.tableData}>{diagnosis.remarks}</Text>
+                    {/* <View style={styles.tableData}>
+                      {diagnosis.file && ( 
+                        <Icon name="file-o" size={20} color="black" />
+                      )}
+                    </View> */}
+                    <TouchableOpacity style={styles.tableData} onPress={() => onPressFile(diagnosis.diagnosisId, diagnosis.file)}>
+                      <Icon name="file-o" size={20} color="black" />
+                    </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -248,10 +292,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: '500',
-    textAlign: 'center',
-  },
-  tableData: {
-    flex: 1,
     textAlign: 'center',
   },
   diagnosisContainer: {

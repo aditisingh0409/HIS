@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
-import Profile from './DocProfile';
-// import Patients from './Patients';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Emergencies from './Emergencies';
 import { useNavigation } from '@react-navigation/native';
 import AppNavigation from '../../AppNavigation';
@@ -9,11 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 export default function DocDashboard() {
-  const [isOpen, setIsOpen] = useState(true);
   const [patients, setPatients] = useState([]);
-  // const [emergencies, setEmergency] = useState([]);
-  // const [selectedRow, setSelectedRow] = useState(null);
-  // const [buttonsVisible, setButtonsVisible] = useState(true);
   const [emerg,setEmerg] = useState([]);
   const navigation = useNavigation();
 
@@ -47,7 +41,6 @@ export default function DocDashboard() {
         setOpCount(response.data.opPatient);
         setIpCount(response.data.ipPatient);
         setEmerg(response.data.emergencies);
-        // fetchEmergencies();
         fetchPatients(); // Fetch patients data when the component mounts
       } 
       else {
@@ -57,33 +50,6 @@ export default function DocDashboard() {
       console.log("Error here", error);
     }
   };
-
-  // const fetchEmergencies = async () => {
-  //   try {
-
-  //     const userId = await AsyncStorage.getItem("userId");
-  //     const token = await AsyncStorage.getItem("token");
-
-  //     const headers = {
-  //       Authorization: token,
-  //       "ngrok-skip-browser-warning": "true",
-  //     };
-      
-  //     const response = await axios.get(
-  //       `https://present-neat-mako.ngrok-free.app/his/doc/handleEmergency?userId=${userId}&emerId=EMER1714742648088`,
-  //     {
-  //       headers: headers,  
-  //     }
-  //   );
-      
-  //     console.log("API response of patient list : "+JSON.stringify(response.data))
-      
-  //     // Update the state variable with the fetched patients data
-  //     setEmergency(response.data.response);
-  //   } catch (error) {
-  //     console.log('Error fetching emergencies:', error);
-  //   }
-  // };
 
   const fetchPatients = async () => {
     try {
@@ -124,15 +90,6 @@ export default function DocDashboard() {
     navigation.navigate("LivePatientInfo", {State:{admitId:patient.admitId,aadhaar:patient.aadhaar}});     
   }
 
-  // const handleRowClick = (index) => {
-  //   setSelectedRow(index === selectedRow ? null : index);
-  //   setButtonsVisible(true);
-  // };
-
-  // const handleCancel = () => {
-  //   setButtonsVisible(false);
-  // };
-
   return (
       <View style={styles.container}>
         <View style={styles.content}>
@@ -152,56 +109,6 @@ export default function DocDashboard() {
             </View>
           </View>
 
-          {/*Emergencies Table */}
-          {/* <View style={styles.patientsContainer}>
-            <Text style={styles.heading}>List of Emergencies</Text> */}
-            {/* <View style={styles.table}>
-              <View style={styles.tableHeaderRow}>
-                <Text style={styles.tableHeader}>Aadhaar ID</Text>
-                <Text style={styles.tableHeader}>First Name</Text>
-                <Text style={styles.tableHeader}>Last Name</Text>
-                <Text style={styles.tableHeader}>Remarks</Text>
-              </View>
-              {emergencies.map(emergency => (
-                <TouchableOpacity key={emergency.aadhaar} onPress={() => onPressLivePatientInfo(emergency)}>
-                  <View style={styles.tableRow}>
-                    <Text style={styles.tableData}>{emergency.aadhaar}</Text>
-                    <Text style={styles.tableData}>{emergency.firstName}</Text>
-                    <Text style={styles.tableData}>{emergency.lastName}</Text>
-                    <Text style={styles.tableData}>{emergency.remark}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View> */}
-            {/* <View style={styles.listContainer}>
-              {emer.map((user, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.listItem}
-                  onPress={() => handleRowClick(index)}
-                >
-                  <Text style={styles.emerId}>{user.emerId}</Text>
-                  <Text style={styles.remark}>{user.remark}</Text>
-                  {selectedRow === index && buttonsVisible && (
-                    <View style={styles.buttonContainer}>
-                      <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => handleCancel(index)}
-                      >
-                        <Text style={styles.buttonText}>Cancel</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => fetchEmergencies(index, user.emerId)}
-                      >
-                        <Text style={styles.buttonText}>OK</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View> */}
           <Emergencies emer={emerg} />
           
           {/* Patients Table */}
@@ -248,20 +155,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderLeftColor: '#CCCCCC',
     overflow: 'hidden',
-  },
-  dropdownMenu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 200,
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255)',
-    zIndex: 9999,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dropdownContent: {
-    width: '100%',
   },
   pieChartsContainer: {
     flexDirection: 'row',
@@ -326,37 +219,5 @@ const styles = StyleSheet.create({
   tableData: {
     flex: 1,
     textAlign: 'center',
-  },
-  listContainer: {
-    marginTop: 60,
-  },
-  listItem: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    paddingBottom: 10,
-    position: 'relative',
-    cursor: 'pointer',
-  },
-  emerId: {
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  remark: {},
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 5,
-    right: 5,
-    flexDirection: 'row',
-  },
-  button: {
-    marginLeft: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    backgroundColor: 'blue',
-  },
-  buttonText: {
-    color: 'white',
   },
 });
