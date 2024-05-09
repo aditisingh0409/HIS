@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import AppNavigation from '../../AppNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import backgroundImage from './img1.jpg'; 
+import backgroundImage from '../Images/background.jpg'; 
 
 export default function DocProfile() {
   const [docInfo, setDocInfo] = useState([]); 
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   container: {
     borderRadius: 20,
-    width: '80%',
+    width: '70%',
     height: '65%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -140,9 +140,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     width: '100%',
-  },
-  sidebarContainer: {
-    backgroundColor: '#FFFFFF',
   },
   profileContainer: {
     flex: 1,
@@ -158,12 +155,13 @@ const styles = StyleSheet.create({
     marginVertical: 50,
   },
   infoContainer: {
-    marginLeft: 50,
+    marginLeft: 30,
     width: '50%',
   },
   heading: {
     fontSize: 25,
     fontWeight: 'bold',
+    color: '#C67C00',
     marginVertical: 20,
   },
   infoRow: {
@@ -175,8 +173,8 @@ const styles = StyleSheet.create({
     marginRight: 50,
   },
   button: {
-    backgroundColor: '#4F2197',
-    width: '90%',
+    backgroundColor: '#C67C00',
+    width: '50%',
     padding: 10,
     borderRadius: 10,
     marginVertical: 10,

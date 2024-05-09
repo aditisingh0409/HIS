@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   introText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FF9C01',
+    color: '#C67C00',
     marginBottom: 30,
     textAlign: 'center',
   },

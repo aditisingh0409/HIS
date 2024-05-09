@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } 
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import backgroundImage from './img1.jpg';
+import backgroundImage from '../Images/background.jpg';
 
 const ChangePassword = () => {
   const navigation = useNavigation();
@@ -116,15 +116,15 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
     width: '80%',
-    height: '30%',
+    height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   title: {
-    fontSize: 30,
-    color: '#1B1B1B',
-    fontWeight: '500',
+    fontSize: 27,
+    color: '#C67C00',
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   input: {
@@ -141,12 +141,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
-    backgroundColor: '#4F2197',
+    backgroundColor: '#C67C00',
     borderRadius: 10,
     justifyContent: 'center',
     padding: 10,
     width: '65%',
     marginHorizontal: 10,
+    marginVertical: 10,
   },
   buttonText: {
     color: 'white',

@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FF9C01',
+    color: '#C67C00',
     marginBottom: 30,
     textAlign: 'center',
   },
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   forgotPassword: {
     color: '#FF3801',
     fontWeight: '500',
+    fontSize: 17,
     marginVertical: 5,
   },
 });
