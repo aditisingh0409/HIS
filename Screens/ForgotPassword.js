@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import img1 from './img1.jpg';
+import backgroundImage from './Images/background.jpg'; 
 import axios from "axios";
 
 const ForgotPassword = () => {
@@ -52,7 +52,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <ImageBackground source={img1} style={styles.background}>
+    <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.header}>Reset Password</Text>
         <View style={styles.inputContainer}>
@@ -83,15 +83,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    width: '80%',
+    width: '50%',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 10,
     padding: 20,
   },
   header: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#FF9C01',
+    marginBottom: 30,
     textAlign: 'center',
   },
   inputContainer: {
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#E8E8E8',
-    width: '90%',
+    width: '95%',
     height: 40,
     color: '#6D6D6D',
     borderRadius: 10,
@@ -108,19 +109,22 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center'
+    // justifyContent: 'space-between',
   },
   button: {
-    backgroundColor: '#4F2197',
-    borderRadius: 10,
-    justifyContent: 'center',
-    padding: 10,
+    backgroundColor: '#C67C00',
     width: '45%',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 20,
+    marginRight: 20,
   },
   buttonText: {
     color: 'white',
+    fontSize: 20,
+    fontWeight: '500',
     textAlign: 'center',
-    fontWeight: 'bold',
   },
 });
 

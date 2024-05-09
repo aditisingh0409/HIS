@@ -6,10 +6,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleShe
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import Voice from '@react-native-voice/voice';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Camera } from 'expo-camera';
+// import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+// import Voice from '@react-native-voice/voice';
+// import { Camera } from 'expo-camera';
 
 const AddDiagnosis = () => {
   const [medicineName, setMedicineName] = useState('');
@@ -32,36 +32,36 @@ const AddDiagnosis = () => {
     discharge: "",
   });
 
-  const startSpeechToText = async () => {
-    try {
-      // Check and request microphone permission
-      const permission = await Camera.getMicrophonePermissionsAsync();
-      if (permission === RESULTS.GRANTED) {
-        setIsListening(true);
-        Voice.start('en-US');
-      } else {
-        console.error('Microphone permission denied');
-      }
-    } catch (error) {
-      console.error('Error starting speech-to-text:', error);
-    }
-  };
+  // const startSpeechToText = async () => {
+  //   try {
+  //     // Check and request microphone permission
+  //     const permission = await Camera.getMicrophonePermissionsAsync();
+  //     if (permission === RESULTS.GRANTED) {
+  //       setIsListening(true);
+  //       Voice.start('en-US');
+  //     } else {
+  //       console.error('Microphone permission denied');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error starting speech-to-text:', error);
+  //   }
+  // };
 
-  const onSpeechResults = (event) => {
-    setIsListening(false);
-    setRemarks(event.value[0]); // Set the speech-to-text result to remarks state
-  };
+  // const onSpeechResults = (event) => {
+  //   setIsListening(false);
+  //   setRemarks(event.value[0]); // Set the speech-to-text result to remarks state
+  // };
 
-  // Function to handle speech-to-text errors
-  const onSpeechError = (error) => {
-    console.error('Speech-to-text error:', error);
-    setIsListening(false);
-  };
+  // // Function to handle speech-to-text errors
+  // const onSpeechError = (error) => {
+  //   console.error('Speech-to-text error:', error);
+  //   setIsListening(false);
+  // };
 
-  // Function to stop speech-to-text
-  const stopSpeechToText = () => {
-    Voice.stop();
-  };
+  // // Function to stop speech-to-text
+  // const stopSpeechToText = () => {
+  //   Voice.stop();
+  // };
 
   const handleChange = (name, value) => {
     setFormData({
@@ -311,10 +311,10 @@ const AddDiagnosis = () => {
         //   Alert.alert('Sorry, we need microphone permissions to make this work!');
         // }
         // startSpeechToText();
-        const audioStatus = await Camera.getMicrophonePermissionsAsync(); // Use requestPermissionsAsync from expo-permissions
-        if (audioStatus !== 'granted') {
-          console.log('Microphone permission denied');
-        }
+        // const audioStatus = await Camera.getMicrophonePermissionsAsync(); // Use requestPermissionsAsync from expo-permissions
+        // if (audioStatus !== 'granted') {
+        //   console.log('Microphone permission denied');
+        // }
       }
     })();
   }, []);
@@ -335,7 +335,7 @@ const AddDiagnosis = () => {
           {/* <TouchableOpacity onPress={isListening ? stopSpeechToText : startSpeechToText}>
             <Text>{isListening ? 'Stop Listening' : 'Start Listening'}</Text>
           </TouchableOpacity>   */}
-          <TouchableOpacity onPress={isListening ? stopSpeechToText : startSpeechToText}>
+          <TouchableOpacity >
             <Icon name={isListening ? 'microphone' : 'microphone-slash'} size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => openPicker()}>

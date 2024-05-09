@@ -76,7 +76,7 @@ export default function PastPatientInfo() {
               <View style={styles.infoContainer}>
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
-                  <Text style={styles.label}>Aadhaar Number:</Text>
+                  <Text style={styles.label}>Aadhaar No:</Text>
                   <Text style={styles.label}>{patient.aadhaar}</Text>
                 </View>
                 <View style={styles.infoRow}>
@@ -101,7 +101,7 @@ export default function PastPatientInfo() {
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Date of Birth:</Text>
-                  <Text style={styles.tableData}>{patient.birthDate}</Text>
+                  <Text style={styles.label}>{patient.birthDate}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Blood group:</Text>

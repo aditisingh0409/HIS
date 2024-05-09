@@ -89,8 +89,8 @@ const Emergencies = ({ emer }) => {
               key={index}
               style={styles.emergencyItem}
               onPress={() => handleRowClick(index)}>
-              <Text style={styles.emergencyItemId}>{user.emerId}</Text>
-              <Text>{user.remark}</Text>
+              <Text style={styles.emergencyItemId}>{user.emerId} :  {user.remark}</Text>
+              {/* <Text>{user.remark}</Text> */}
               {selectedRow === index && buttonsVisible && (
                 <View style={styles.emergencyButtonContainer}>
                   <TouchableOpacity style={styles.emergencyButton} onPress={handleCancel}>
@@ -127,8 +127,11 @@ const styles = StyleSheet.create({
     },
     boxContainer: {
       flex: 1,
-      padding: '0 10px',
+      padding: 10,
       position: 'relative',
+      borderColor: '#a30d0d',
+      borderWidth: 2,
+      borderRadius: 5,
     },
     emergencyHeader: {
       position: 'absolute',
@@ -158,6 +161,7 @@ const styles = StyleSheet.create({
       borderBottomWidth: 1,
       borderBottomColor: '#ccc',
       paddingBottom: 10,
+      paddingTop: 10,
       position: 'relative',
     },
     emergencyItemId: {
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
       width: 120,
     },
     emergencyButton: {
-      backgroundColor: '#4F2197',
+      backgroundColor: '#C67C00',
       width: '70%',
       padding: 10,
       alignSelf: 'center',

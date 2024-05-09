@@ -87,9 +87,9 @@ export default function PastPatientList() {
       <View style={styles.container}>
         <View style={styles.content}>
           <View style={styles.searchContainer}>
+            <Text style={styles.searchText}>Search by Patient ID</Text>  
             <TextInput
               style={styles.searchInput}
-              placeholder="Search by Patient ID"
               value={searchText}
               onChangeText={handleSearch}
               placeholderTextColor="#888"
@@ -105,7 +105,6 @@ export default function PastPatientList() {
                 <Text style={styles.tableHeader}>Patient ID</Text>
                 <Text style={styles.tableHeader}>First Name</Text>
                 <Text style={styles.tableHeader}>Last Name</Text>
-                <Text style={styles.tableHeader}>Remarks</Text>
               </View>
               {patients.map(patient => (
                 <TouchableOpacity key={patient.aadhaar} onPress={() => onPressPatientInfo(patient)}>
@@ -113,7 +112,6 @@ export default function PastPatientList() {
                     <Text style={styles.tableData}>{patient.aadhaar}</Text>
                     <Text style={styles.tableData}>{patient.firstName}</Text>
                     <Text style={styles.tableData}>{patient.lastName}</Text>
-                    <Text style={styles.tableData}>{patient.remark}</Text>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -150,7 +148,12 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     marginBottom: 16,
-    width: '30%',
+    alignItems: 'center',
+  },
+  searchText: {
+    marginLeft: 10,
+    fontSize: 15,
+    paddingRight: 10,
   },
   searchInput: {
     height: 40,

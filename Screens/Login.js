@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, P
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import backgroundImage from './img1.jpg'; 
+import backgroundImage from './Images/background.jpg'; 
 
 const Login = () => {
   const navigation = useNavigation();
@@ -69,7 +69,7 @@ const Login = () => {
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
-        <Text style={styles.title}>User Login</Text>
+        <Text style={styles.title}>Doctor Login</Text>
         <TextInput
           placeholder="Username"
           style={styles.input}
@@ -96,7 +96,6 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
@@ -105,17 +104,18 @@ const styles = StyleSheet.create({
   },
   container: {
     borderRadius: 20,
-    width: '80%',
+    width: '60%',
     height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   title: {
-    fontSize: 30,
-    color: '#1B1B1B',
-    fontWeight: '500',
-    marginBottom: 20,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FF9C01',
+    marginBottom: 30,
+    textAlign: 'center',
   },
   input: {
     backgroundColor: '#E8E8E8',
@@ -127,11 +127,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    backgroundColor: '#4F2197',
+    backgroundColor: '#C67C00',
     width: '90%',
     padding: 10,
     borderRadius: 10,
-    marginVertical: 10,
+    marginVertical: 20,
   },
   buttonText: {
     color: 'white',
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   forgotPassword: {
-    color: '#2974D3',
+    color: '#FF3801',
     fontWeight: '500',
     marginVertical: 5,
   },

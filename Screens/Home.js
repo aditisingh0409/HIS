@@ -1,111 +1,83 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Button } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ImageBackground } from 'react-native';
+import backgroundImage from './Images/background.jpg'; 
 import { useNavigation } from '@react-navigation/native';
 
-const Home = () => {
+const LoginScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        showsVerticalScrollIndicator={false}
-      >
-        <Image
-          source={"./img1.jpg"}
-          style={styles.logo}
-          resizeMode='contain'
-        />
-
-        <Image
-          source={"./img1.jpg"}
-          style={styles.image}
-          resizeMode='contain'
-        />
-
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>
-            Health is new{' '}
-            <Text style={styles.highlight}>Rizz</Text>
+    <ImageBackground source={backgroundImage} style={styles.background}>
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.introText}>
+            Welcome, Doctor!
           </Text>
-
-          <Image
-            source={"./img1.jpg"}
-            style={styles.imagePath}
-            resizeMode='contain'
-          />
+          <Text style={styles.subText}>
+            Explore the Hospital Information System
+          </Text>
+          <Image source={require('./Images/heartbeat.png')} style={styles.heartIcon} />
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')} >
+            <Text style={styles.buttonText}>Go to Login</Text>
+          </TouchableOpacity>
         </View>
-
-        <Text style={styles.description}>
-          Let's make DOCTOR's life easy.
-        </Text>
-
-        <Button
-          title="Go to Login"
-          onPress={() => navigation.replace('Login')}
-          containerStyles={styles.button}
-        />
-      </ScrollView>
-
-      <StatusBar style="light" />
-    </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: '#bcc3fb',
-  },
-  logo: {
-    width: 130,
-    height: 84,
-  },
-  image: {
-    maxWidth: 320,
     width: '100%',
-    height: 280,
-  },
-  textContainer: {
-    position: 'relative',
-    marginTop: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#000',
-  },
-  highlight: {
-    color: '#FF9C01',
-  },
-  imagePath: {
-    width: 136,
-    height: 18,
-    position: 'absolute',
-    bottom: -2,
-    right: -8,
-  },
-  description: {
-    fontSize: 14,
-    textAlign: 'center',
-    color: '#FFF',
-    marginTop: 5,
-  },
-  button: {
-    width: '100%',
-    marginTop: 7,
-    backgroundColor: '#FF9C01',
-    borderRadius: 10,
-    minHeight: 62,
+    height: '100%',
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }, 
+  container: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 20,
+    width: '60%',
+    height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  contentContainer: {
+    alignItems: 'center',
+  },
+  introText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FF9C01',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  subText: {
+    fontSize: 18,
+    color: '#006400',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#C67C00',
+    width: '90%',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  heartIcon: {
+    width: 250,
+    height: 50,
+    margin: 10,
+    opacity: 0.6,
+  },
 });
 
-export default Home;
+export default LoginScreen;

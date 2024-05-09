@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import AppNavigation from '../../AppNavigation';
-import backgroundImage from './img1.jpg'; 
+import backgroundImage from '../Images/background.jpg'; 
 
 export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -68,7 +68,7 @@ export default function CalendarScreen() {
           />
           <View style={styles.shiftInfoContainer}>
             <Text style={styles.bold}>Shift Details for {selectedDate.toLocaleDateString()}:</Text>
-            <Text> {selectedShiftInfo} </Text>
+            <Text style={styles.text}> {selectedShiftInfo} </Text>
           </View>
         </View>
       </View>
@@ -100,13 +100,26 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
     height: '100%',
+    justifyContent: 'center',
   },
   shiftInfoContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     marginTop: 20,
-    alignItems: 'center',
+    width: '40%',
+    height: '10%',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   bold: {
+    fontSize: 17,
     fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  text: {
+    fontSize: 16,
+    padding: 10,
+    alignSelf: 'center',
   },
   navigation: {
     position: 'absolute',
