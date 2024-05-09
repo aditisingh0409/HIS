@@ -10,11 +10,9 @@ import PastPatientList from "./Screens/Doctor/PastPatientList";
 import LivePatientInfo from "./Screens/Doctor/LivePatientInfo";
 import PastPatientInfo from "./Screens/Doctor/PastPatientInfo";
 import CalendarScreen from "./Screens/Doctor/CalendarScreen";
-import SettingsScreen from "./Screens/Doctor/SettingsScreen";
 import UpdateProfile from "./Screens/Doctor/UpdateProfile";
 import DocProfile from "./Screens/Doctor/DocProfile";
 import ChangePassword from "./Screens/Doctor/ChangePassword";
-import { View, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -25,14 +23,6 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home"
       screenOptions={({ route }) => ({
-        // headerRight: () => (
-        //   <View>
-        //     <Image source={require('./Screens/Doctor/img1.jpg')} style={{width: 50, height: 50, borderRadius: 50, marginRight: 10,}} />
-        //   </View>
-        // ),
-        // headerRightContainerStyle: {
-        //   paddingRight: 10,
-        // },
         headerTitle: '', // Hides the screen name
       })}
       >
@@ -46,7 +36,6 @@ const App = () => {
         <Stack.Screen name="LivePatientInfo" component={LivePatientInfo} />
         <Stack.Screen name="PastPatientInfo" component={PastPatientInfo} />
         <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
-        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
         <Stack.Screen name="DocProfile" component={DocProfile} />
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
