@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   closeButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#C67C00',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,

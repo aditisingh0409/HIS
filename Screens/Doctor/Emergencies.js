@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
       margin: 10,
     },
     button: {
-      backgroundColor: '#4F2197',
+      backgroundColor: '#C67C00',
       width: '50%',
       padding: 10,
       alignSelf: 'center',
