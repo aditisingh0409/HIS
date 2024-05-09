@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginLeft: 50,
-    width: '50%',
+    width: '40%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -274,10 +274,13 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   label: {
     minWidth: 100,
-    marginRight: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: '#C67C00',

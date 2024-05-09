@@ -78,137 +78,39 @@ const AddDiagnosis = () => {
   formData["patientId"]=aadhaar;
   formData["medicine"]=medicines;
 
-  // const handleAddMedicine = () => {
-  //   if (medicineName && count) {
-  //     setMedicines([...medicines, { medicineName: count }]);
-  //     setMedicineName('');
-  //     setCount('');
-  //   }
-  // };
-
   const handleAddMedicine = () => {
-    // const newMedicine = { [medicineName]: { count } };
     setMedicines((medicines) => 
       ({ ...medicines, 
       [medicineName]:  count 
     }));
-  
-    // setMedicines(medicines => ({
-    //   ...medicines,
-    //   [medicineName]: count
-    // }));
-  //   setMedicines(...medicines,{
-  //     medicineName: count
-  // });
     setMedicineName('');
     setCount(0); // Reset count after adding
   };
 
-  const handleIncreaseCount = (index) => {
+  const handleIncreaseCount = (name) => {
     const updatedMedicines = { ...medicines };
-    updatedMedicines[index].count += 1;
-    // updatedMedicines[index].count = Number(updatedMedicines[index].count) + 1;
+    updatedMedicines[name] = Number(updatedMedicines[name]) + 1;
     setMedicines(updatedMedicines);
   };
 
-  // // const handleIncreaseCount = (index) => {
-  // //   if (medicines.hasOwnProperty(index)) {
-  // //     setMedicines((medicines) => ({
-  // //       ...medicines,
-  // //       [index]: medicines[index] + 1
-  // //     }));
-  // //   }
-  // // };
-
-  const handleDecreaseCount = (index) => {
+  const handleDecreaseCount = (name) => {
     const updatedMedicines = {...medicines};
-    if (updatedMedicines[index].count > 1) {
-      updatedMedicines[index].count -= 1;
+    if (updatedMedicines[name] > 1) {
+      updatedMedicines[name] = Number(updatedMedicines[name]) - 1;
       setMedicines(updatedMedicines);
     } 
     else {
       // Remove medicine if count reaches 0
-      delete updatedMedicines[index];
+      delete updatedMedicines[name];
       setMedicines(updatedMedicines);
     }
   };
 
-  const handleRemoveMedicine = (index) => {
+  const handleRemoveMedicine = (name) => {
     const updatedMedicines = {...medicines};
-    delete updatedMedicines[index];
-    // updatedMedicines.splice(index, 1);
+    delete updatedMedicines[name];
     setMedicines(updatedMedicines);
   };
-
-  // const handleRemoveMedicine = (index) => {
-  //   // if (medicineName[index] > 1) {
-  //   //   setMedicines(
-  //   //     ...medicines,
-  //   //     {index: medicines[index] - 1
-  //   // });
-  //   // } else {
-  //   //   const updatedData = { ...medicines };
-  //   //   delete updatedData[index];
-  //   //   setMedicines(updatedData);
-  //   // }
-  //   if (medicineName[index] > 1) {
-  //     setMedicines(medicines => ({
-  //       ...medicines,
-  //       [index]: medicines[index] - 1
-  //     }));
-  //   } else {
-  //     const updatedData = { ...medicines };
-  //     delete updatedData[index];
-  //     setMedicines(updatedData);
-  //   }
-  // };
-  
-  // const handleIncreaseCount = (index) => {
-  //   setMedicines((prevMedicines) => {
-  //     const updatedMedicines = { ...prevMedicines };
-  //     updatedMedicines[index] += 1; // Increase count by one
-  //     return updatedMedicines;
-  //   });
-  // };
-  
-  // const handleDecreaseCount = (index) => {
-  //   setMedicines((prevMedicines) => {
-  //     const updatedMedicines = { ...prevMedicines };
-  //     if (updatedMedicines[index] > 0) {
-  //       updatedMedicines[index] -= 1; // Decrease count by one if it's greater than 0
-  //     }
-  //     return updatedMedicines;
-  //   });
-  // };
-  
-  // const handleRemoveMedicine = (index) => {
-  //   setMedicines((prevMedicines) => {
-  //     const updatedMedicines = { ...prevMedicines };
-  //     delete updatedMedicines[index]; // Remove the medicine entry altogether
-  //     return updatedMedicines;
-  //   });
-  // };
-
-  // const handleRemoveMedicine = (index) => {
-  //   if (medicines[index] > 1) {
-  //     setMedicines(medicines => ({
-  //       ...medicines,
-  //       [index]: medicines[index] - 1
-  //     }));
-  //   } else {
-  //     const updatedData = { ...medicines };
-  //     delete updatedData[index];
-  //     setMedicines(updatedData);
-  //   }
-  // };
-
-  // // Function to handle increasing count for existing key
-  // const handleIncreaseCount = (index) => {
-  //   setMedicines(medicines => ({
-  //     ...medicines,
-  //     [index]: medicines[index] ? medicines[index] + 1 : 1
-  //   }));
-  // };
 
   const newFile = {
     file: document,
@@ -275,15 +177,15 @@ const AddDiagnosis = () => {
     <View style={styles.medicineItem}>
       <Text style={styles.medicineName}>{item[0]}</Text>
       <View style={styles.countContainer}>
-        <TouchableOpacity style={styles.countButton} onPress={() => handleDecreaseCount(index)}>
+        <TouchableOpacity style={styles.countButton} onPress={() => handleDecreaseCount(item[0])}>
           <Text style={styles.countButtonText}>-</Text>
         </TouchableOpacity>
         <Text style={styles.countText}>{item[1]}</Text>
-        <TouchableOpacity style={styles.countButton} onPress={() => handleIncreaseCount(index)}>
+        <TouchableOpacity style={styles.countButton} onPress={() => handleIncreaseCount(item[0])}>
           <Text style={styles.countButtonText}>+</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveMedicine(index)}>
+      <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveMedicine(item[0])}>
         <Text style={styles.removeButtonText}>Remove</Text>
       </TouchableOpacity>
     </View>
@@ -379,19 +281,6 @@ const AddDiagnosis = () => {
         </View>
       )}
 
-      {/* {Object.keys(medicines).length > 0 && (
-        <View style={styles.medicinesList}>
-          <Text style={styles.medicinesListTitle}>Added Medicines:</Text>
-          <FlatList
-            data={Object.entries(medicines)}
-            renderItem={({ item }) => (
-              <Text>{item[0]}: {item[1]}</Text>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-      )} */}
-
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Discharge</Text>
         {/* <Picker
@@ -404,17 +293,6 @@ const AddDiagnosis = () => {
           <Picker.Item label="YES" value="1" />
         </Picker> */}
         <RNPickerSelect
-          // style={{
-          //   inputIOS: {
-          //     color: 'black',
-          //   },
-          //   inputAndroid: {
-          //     color: 'black',
-          //   },
-          //   placeholder: {
-          //     color: 'white', 
-          //   },
-          // }}
           onValueChange={(value) => handleChange('discharge', value)}
           items={[
             { label: 'NO', value: '0' },
