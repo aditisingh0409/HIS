@@ -72,7 +72,7 @@ export default function PastPatientInfo() {
       <View style={styles.content}>
         <View style={styles.row}>
             <View style={styles.profileContainer}>
-              <Image source={require('./img1.jpg')} style={styles.profileImage} />
+              <Image source={require('../Images/images1.jpeg')} style={styles.profileImage} />
               <View style={styles.infoContainer}>
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
@@ -195,11 +195,15 @@ const styles = StyleSheet.create({
   infoContainer: {
     marginLeft: 50,
     width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
     margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   infoRow: {
     flexDirection: 'row',

@@ -114,7 +114,7 @@ export default function LivePatientInfo() {
       <View style={styles.content}>
         <View style={styles.row}>
             <View style={styles.profileContainer}>
-              <Image source={require('./img1.jpg')} style={styles.profileImage} />
+              <Image source={require('../Images/images1.jpeg')} style={styles.profileImage} />
               <View style={styles.infoContainer}>
                 <Text style={styles.heading}>Patient Information</Text>
                 <View style={styles.infoRow}>
@@ -178,11 +178,6 @@ export default function LivePatientInfo() {
                     <Text style={styles.tableData}>{counter + index}</Text>
                     <Text style={styles.tableData}>{diagnosis.date}</Text>
                     <Text style={styles.tableData}>{diagnosis.remarks}</Text>
-                    {/* <View style={styles.tableData}>
-                      {diagnosis.file && ( 
-                        <Icon name="file-o" size={20} color="black" />
-                      )}
-                    </View> */}
                     <TouchableOpacity style={styles.tableData} onPress={() => onPressFile(diagnosis.diagnosisId, diagnosis.file)}>
                       <Icon name="file-o" size={20} color="black" />
                     </TouchableOpacity>
@@ -266,11 +261,15 @@ const styles = StyleSheet.create({
   infoContainer: {
     marginLeft: 50,
     width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
     margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   infoRow: {
     flexDirection: 'row',
@@ -281,7 +280,7 @@ const styles = StyleSheet.create({
     marginRight: 50,
   },
   button: {
-    backgroundColor: '#4F2197',
+    backgroundColor: '#C67C00',
     width: '50%',
     padding: 10,
     borderRadius: 10,
@@ -331,6 +330,7 @@ const styles = StyleSheet.create({
   tableData: {
     flex: 1,
     textAlign: 'center',
+    alignItems: 'center',
   },
   modalContainer: {
     flex: 1,
